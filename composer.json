@@ -1,0 +1,16 @@
+{
+    "name": "LaraMod/admin-products",
+    "description": "LaraMod Admin Products Module",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Nikola Katsarov",
+            "email": "katsarov@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+      "laramod/admin-core": "dev"
+    }
+}
