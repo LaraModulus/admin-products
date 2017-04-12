@@ -1,0 +1,2 @@
+# admin-products
+Products Module
