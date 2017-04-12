@@ -1,8 +1,8 @@
 <?php
-namespace Escapeboy\AdminProducts\Controllers;
+namespace LaraMod\AdminProducts\Controllers;
 
 use App\Http\Controllers\Controller;
-use Escapeboy\AdminProducts\Models\Products;
+use LaraMod\AdminProducts\Models\Products;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;

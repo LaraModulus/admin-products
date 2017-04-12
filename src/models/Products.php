@@ -1,14 +1,11 @@
 <?php
-namespace Escapeboy\AdminProducts\Models;
+namespace LaraMod\AdminProducts\Models;
 
-use Escapeboy\AdminCore\Scopes\AdminCoreOrderByCreatedAtScope;
-use Escapeboy\AdminCore\Scopes\AdminCoreOrderByPosScope;
-use Escapeboy\AdminFiles\Models\Files;
+use LaraMod\AdminCore\Scopes\AdminCoreOrderByCreatedAtScope;
+use LaraMod\AdminCore\Scopes\AdminCoreOrderByPosScope;
+use LaraMod\AdminFiles\Models\Files;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 class Products extends Model
 {

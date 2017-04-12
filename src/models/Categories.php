@@ -1,8 +1,8 @@
 <?php
-namespace Escapeboy\AdminProducts\Models;
+namespace LaraMod\AdminProducts\Models;
 
-use Escapeboy\AdminCore\Scopes\AdminCoreOrderByCreatedAtScope;
-use Escapeboy\AdminCore\Scopes\AdminCoreOrderByPosScope;
+use LaraMod\AdminCore\Scopes\AdminCoreOrderByCreatedAtScope;
+use LaraMod\AdminCore\Scopes\AdminCoreOrderByPosScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
