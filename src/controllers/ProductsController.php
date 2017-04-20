@@ -8,6 +8,12 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * Class ProductsController
+ *
+ * @package LaraMod\AdminProducts\Controllers
+ * TODO: Remove pagination from index and add filters
+ */
 class ProductsController extends Controller
 {
 
