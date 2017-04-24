@@ -1,14 +1,11 @@
 <?php
-namespace Escapeboy\AdminProducts\Models;
+namespace LaraMod\AdminProducts\Models;
 
-use Escapeboy\AdminCore\Scopes\AdminCoreOrderByCreatedAtScope;
-use Escapeboy\AdminCore\Scopes\AdminCoreOrderByPosScope;
-use Escapeboy\AdminFiles\Models\Files;
+use LaraMod\AdminCore\Scopes\AdminCoreOrderByCreatedAtScope;
+use LaraMod\AdminCore\Scopes\AdminCoreOrderByPosScope;
+use LaraMod\AdminFiles\Models\Files;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 class Products extends Model
 {
@@ -30,6 +27,8 @@ class Products extends Model
     ];
 
     protected $dates = ['deleted_at', 'promo_from', 'promo_to'];
+
+    protected $appends = ['title', 'price_final'];
 
     public function scopeVisible($q)
     {
@@ -83,6 +82,20 @@ class Products extends Model
     }
     public function getMetaKeywordsAttribute(){
         return $this->{'meta_keywords_'.config('app.fallback_locale', 'en')};
+    }
+
+    public function getPriceFinalAttribute(){
+        return (double)($this->promo_price > 0 && strtotime($this->promo_from) < time() && strtotime($this->promo_to) > time() ? $this->promo_price : $this->price);
+    }
+
+    public function getIsPromoAttribute()
+    {
+        return ($this->promo_price > 0 && strtotime($this->promo_from) < time() && strtotime($this->promo_to) > time() ? true : false);
+    }
+
+    public function getPromoDiscountAttribute(){
+        if(!$this->is_promo) return 0;
+        return 100-ceil(($this->promo_price / $this->price)*100);
     }
 
 

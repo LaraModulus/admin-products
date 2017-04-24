@@ -93,7 +93,7 @@
                             </div>
                         @endforeach
                     </div>
-                    @if(class_exists(AdminFilesService::class))
+                    @if(class_exists(\LaraMod\AdminFiles\AdminFilesServiceProvider::class))
                         <div class="panel panel-default" data-ng-controller="filesContainerController">
                             <div class="panel-body">
                                 <div data-ng-class="{hidden: !files.item_files.length}">
@@ -192,7 +192,7 @@
                             <div class="form-group">
                                 <label for="item_categories">Categories</label>
                                 <select class="form-control selector" name="item_categories[]" id="item_categories" multiple>
-                                    @foreach(\Escapeboy\AdminProducts\Models\Categories::all() as $category)
+                                    @foreach(\LaraMod\AdminProducts\Models\Categories::all() as $category)
                                         <option value="{{$category->id}}"
                                                 @if(in_array($category->id, $item->categories->pluck('id')->toArray())) selected @endif
                                         >{{$category->{'title_'.config('app.fallback_locale', 'en')} }}</option>
@@ -210,7 +210,7 @@
 
 
     </div>
-    @if(class_exists(AdminFilesService::class))
+    @if(class_exists(\LaraMod\AdminFiles\AdminFilesServiceProvider::class))
         <script>
             app.controller('productController', function($scope, $http, SweetAlert, CSRF_TOKEN, $window, Files) {
                 $scope.files = Files;

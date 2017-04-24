@@ -1,11 +1,11 @@
 <?php
-namespace Escapeboy\AdminProducts\Controllers;
+namespace LaraMod\AdminProducts\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\User;
 use Carbon\Carbon;
-use Escapeboy\AdminProducts\Models\Categories;
-use Escapeboy\AdminProducts\Models\Reviews;
+use LaraMod\AdminProducts\Models\Categories;
+use LaraMod\AdminProducts\Models\Reviews;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
