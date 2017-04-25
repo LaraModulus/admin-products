@@ -16,7 +16,7 @@
     },
     "autoload": {
       "psr-4": {
-        "LaraMod\\AdminProducts\\": "src/"
+        "LaraMod\\Admin\\Products\\": "src/"
       }
     }
 }

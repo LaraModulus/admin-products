@@ -1,6 +1,6 @@
 <?php
 
-namespace LaraMod\AdminProducts;
+namespace LaraMod\Admin\Products;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -15,7 +15,7 @@ class AdminProductsServiceProvider extends ServiceProvider
     {
         $this->loadViewsFrom(__DIR__.'/views', 'adminproducts');
         $this->publishes([
-            __DIR__.'/views' => base_path('resources/views/laramod/admin-products'),
+            __DIR__.'/views' => base_path('resources/views/laramod/admin/products'),
         ]);
         $this->publishes([
             __DIR__.'/../database/migrations/' => database_path('migrations')

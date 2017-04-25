@@ -13,7 +13,7 @@ composer require laramod\admin-products
 ```php 
 'providers' => [
     ...
-    LaraMod\AdminProducts\AdminProductsServiceProvider::class,
+    LaraMod\Admin\Products\AdminProductsServiceProvider::class,
 ]
 ```
 **Publish migrations**

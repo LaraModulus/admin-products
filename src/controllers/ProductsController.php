@@ -1,11 +1,9 @@
 <?php
-namespace LaraMod\AdminProducts\Controllers;
+namespace LaraMod\Admin\Products\Controllers;
 
 use App\Http\Controllers\Controller;
-use LaraMod\AdminProducts\Models\Products;
+use LaraMod\Admin\Products\Models\Products;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 /**

@@ -1,13 +1,9 @@
 <?php
-namespace LaraMod\AdminProducts\Controllers;
+namespace LaraMod\Admin\Products\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\User;
-use Carbon\Carbon;
-use LaraMod\AdminProducts\Models\Categories;
+use LaraMod\Admin\Products\Models\Categories;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 
 class CategoriesController extends Controller
 {

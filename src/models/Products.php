@@ -1,9 +1,9 @@
 <?php
-namespace LaraMod\AdminProducts\Models;
+namespace LaraMod\Admin\Products\Models;
 
-use LaraMod\AdminCore\Scopes\AdminCoreOrderByCreatedAtScope;
-use LaraMod\AdminCore\Scopes\AdminCoreOrderByPosScope;
-use LaraMod\AdminFiles\Models\Files;
+use LaraMod\Admin\Core\Scopes\AdminCoreOrderByCreatedAtScope;
+use LaraMod\Admin\Core\Scopes\AdminCoreOrderByPosScope;
+use LaraMod\Admin\Files\Models\Files;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
