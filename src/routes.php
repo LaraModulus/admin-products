@@ -3,7 +3,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group([
     'prefix' => 'admin/products',
-    'middleware' => ['web', 'auth'],
+    'middleware' => ['admin', 'auth.admin'],
     'namespace' => 'LaraMod\Admin\Products\Controllers',
 ], function(){
     Route::get('/', ['uses' => 'ProductsController@index']);
