@@ -5,13 +5,9 @@ use App\Http\Controllers\Controller;
 use LaraMod\Admin\Products\Models\Products;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
+use Yajra\Datatables\Datatables;
 
-/**
- * Class ProductsController
- *
- * @package LaraMod\AdminProducts\Controllers
- * TODO: Remove pagination from index and add filters
- */
+
 class ProductsController extends Controller
 {
 
@@ -113,6 +109,23 @@ class ProductsController extends Controller
             'type' => 'success',
             'text' => 'Item moved to trash.'
         ]);
+    }
+
+    public function dataTable(){
+        $items = Products::select(['id','title_en', 'code', 'created_at','viewable']);
+        return DataTables::of($items)
+            ->addColumn('action', function($item){
+                return '<a href="'.route('admin.products.items.form', ['id' => $item->id]).'" class="btn btn-success btn-xs"><i class="fa fa-pencil"></i></a>'
+                    .'<a href="'.route('admin.products.items.delete', ['id' => $item->id]).'" class="btn btn-danger btn-xs require-confirm"><i class="fa fa-trash"></i></a>';
+            })
+            ->editColumn('created_at', function($item){
+                return $item->created_at->format('d.m.Y H:i');
+            })
+            ->addColumn('status', function($item){
+                return !$item->viewable ? '<i class="fa fa-eye-slash"></i>' : '<i class="fa fa-eye"></i>';
+            })
+            ->orderColumn('created_at $1','code $1')
+            ->make('true');
     }
 
 

@@ -4,6 +4,7 @@ namespace LaraMod\Admin\Products\Controllers;
 use App\Http\Controllers\Controller;
 use LaraMod\Admin\Products\Models\Reviews;
 use Illuminate\Http\Request;
+use Yajra\Datatables\Datatables;
 
 class ReviewsController extends Controller
 {
@@ -67,6 +68,24 @@ class ReviewsController extends Controller
             'type' => 'success',
             'text' => 'Review moved to trash.'
         ]);
+    }
+
+    public function dataTable(){
+        $items = Reviews::select(['id','title', 'language','created_at', 'products_items_id']);
+        return DataTables::of($items)
+            ->addColumn('action', function($item){
+                return '<a href="'.route('admin.products.reviews.form', ['id' => $item->id]).'" class="btn btn-success btn-xs"><i class="fa fa-pencil"></i></a>'
+                        .'<a href="'.route('admin.products.reviews.delete', ['id' => $item->id]).'" class="btn btn-danger btn-xs require-confirm"><i class="fa fa-trash"></i></a>';
+            })
+            ->addColumn('product_title', function($item){
+                if(!$item->product) return null;
+                return $item->product->title;
+            })
+            ->editColumn('created_at', function($item){
+                return $item->created_at->format('d.m.Y H:i');
+            })
+            ->orderColumn('created_at $1','products_items_id $1')
+            ->make('true');
     }
 
 

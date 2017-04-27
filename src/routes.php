@@ -15,6 +15,8 @@ Route::group([
         Route::post('/form', ['as' => 'admin.products.items.form', 'uses' => 'ProductsController@postForm']);
 
         Route::get('/delete', ['as' => 'admin.products.items.delete', 'uses' => 'ProductsController@delete']);
+
+        Route::get('/datatable', ['as' => 'admin.products.items.datatable', 'uses' => 'ProductsController@dataTable']);
     });
 
     Route::group([
@@ -25,6 +27,8 @@ Route::group([
         Route::post('/form', ['as' => 'admin.products.categories.form', 'uses' => 'CategoriesController@postForm']);
 
         Route::get('/delete', ['as' => 'admin.products.categories.delete', 'uses' => 'CategoriesController@delete']);
+
+        Route::get('/datatable', ['as' => 'admin.products.categories.datatable', 'uses' => 'CategoriesController@dataTable']);
     });
 
     Route::group([
@@ -35,6 +39,7 @@ Route::group([
         Route::post('/form', ['as' => 'admin.products.reviews.form', 'uses' => 'ReviewsController@postForm']);
 
         Route::get('/delete', ['as' => 'admin.products.reviews.delete', 'uses' => 'ReviewsController@delete']);
+        Route::get('/datatable', ['as' => 'admin.products.reviews.datatable', 'uses' => 'ReviewsController@dataTable']);
     });
 
 
