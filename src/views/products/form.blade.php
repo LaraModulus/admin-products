@@ -191,7 +191,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="item_categories">Categories</label>
-                                <select class="form-control selector" name="item_categories[]" id="item_categories" multiple>
+                                <select class="form-control select2" name="item_categories[]" id="item_categories" multiple>
                                     @foreach(\LaraMod\Admin\Products\Models\Categories::all() as $category)
                                         <option value="{{$category->id}}"
                                                 @if(in_array($category->id, $item->categories->pluck('id')->toArray())) selected @endif

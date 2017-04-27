@@ -104,7 +104,7 @@
                             @if(\LaraMod\Admin\Products\Models\Categories::where('id', '!=', $item->id)->count())
                                 <div class="form-group">
                                     <label for="categories_id">Categories</label>
-                                    <select class="form-control selector" name="categories_id" id="categories_id">
+                                    <select class="form-control select2" name="categories_id" id="categories_id">
                                         <option value="0">This is parent category</option>
                                         @foreach(\LaraMod\Admin\Products\Models\Categories::where('id', '!=', $item->id)->get() as $c)
                                             <option value="{{$c->id}}" @if($c->id==$item->categories_id) selected @endif>{{$c->title}}</option>

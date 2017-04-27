@@ -70,7 +70,7 @@
                             </div>
                                 <div class="form-group">
                                     <label for="products_items_id">Product</label>
-                                    <select class="form-control selector" name="products_items_id" id="products_items_id">
+                                    <select class="form-control select2" name="products_items_id" id="products_items_id">
                                         @foreach(\LaraMod\Admin\Products\Models\Products::all() as $p)
                                             <option value="{{$p->id}}" @if($item->product && $p->id==$item->product->id) selected @endif>{{$p->title}}</option>
                                         @endforeach
