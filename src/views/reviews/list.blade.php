@@ -11,7 +11,9 @@
         <div class="row">
             <div class="col-xs-12">
                 <div class="table-responsive">
-                    <table class="table table-striped">
+                    <table class="table table-striped" id="items_table"
+                           data-page-length="10"
+                    >
                         <thead>
                         <tr>
                             <td colspan="4">
@@ -27,37 +29,31 @@
                             <th><i class="fa fa-cogs"></i></th>
                         </tr>
                         </thead>
-                        <tbody>
-                        @foreach($items as $item)
-                            <tr>
-                                <td>
-                                    {{$item->id}}
-                                </td>
-                                <td>
-                                    {{$item->title}}
-                                </td>
-                                <td>
-                                    {{$item->created_at->format('d.m.Y H:i')}}
-                                </td>
-                                <td>
-                                    {{$item->product->title}}
-                                </td>
-                                <td>
-                                    <a href="{{route('admin.products.reviews.form', ['id' => $item->id])}}" class="btn btn-success btn-xs"><i class="fa fa-pencil"></i></a>
-                                    <a href="{{route('admin.products.reviews.delete', ['id' => $item->id])}}" class="btn btn-danger btn-xs require-confirm"><i class="fa fa-trash"></i></a>
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                        <tfoot>
-                        <tr>
-                            <td colspan="6">{{$items->links()}}</td>
-                        </tr>
-                        </tfoot>
                     </table>
                 </div>
             </div>
         </div>
 
     </div>
+@stop
+@section('js')
+    <script type="text/javascript">
+        $(function () {
+            $('#items_table').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: '{!! route('admin.products.reviews.datatable') !!}',
+                order: [
+                    [2, 'desc']
+                ],
+                columns: [
+                    {data: 'id', name: 'ID'},
+                    {data: 'title', name: 'title'},
+                    {data: 'created_at', searchable: false},
+                    {data: 'product_title', name: 'product_title', searchable: false, orderable: false},
+                    {data: 'action', name: 'action', orderable: false, searchable: false}
+                ]
+            });
+        });
+    </script>
 @stop
