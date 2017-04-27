@@ -147,10 +147,7 @@
                             <div class="form-group">
                                 <label for="visible">Visible?</label>
                                 <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" value="1" id="visible" name="visible" @if($item->viewable || !$item->id) checked @endif>
-                                        Yes
-                                    </label>
+                                    <input type="checkbox" value="1" id="visible" name="visible" @if($item->viewable || !$item->id) checked @endif>
                                 </div>
                             </div>
                             <div class="form-group">
