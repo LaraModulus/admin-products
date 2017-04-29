@@ -38,7 +38,7 @@
 @stop
 @section('js')
     <script type="text/javascript">
-        $(function(){
+        $(function () {
             $('#items_table').DataTable({
                 processing: true,
                 serverSide: true,
@@ -47,10 +47,10 @@
                     [4, 'desc']
                 ],
                 columns: [
-                    {data:'id', name: 'ID'},
-                    {data:'title_en', name: 'title_en'},
-                    {data:'status', searchable:false, orderable:false},
-                    {data:'created_at', searchable:false},
+                    {data: 'id', name: 'ID'},
+                    {data: 'title_en', name: 'title_en'},
+                    {data: 'status', searchable: false, orderable: false},
+                    {data: 'created_at', searchable: false},
                     {data: 'action', name: 'action', orderable: false, searchable: false}
                 ]
             });

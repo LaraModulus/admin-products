@@ -1,4 +1,5 @@
 <?php
+
 namespace LaraMod\Admin\Products\Models;
 
 use LaraMod\Admin\Core\Scopes\AdminCoreOrderByCreatedAtScope;
@@ -23,10 +24,11 @@ class Reviews extends Model
         'link',
         'products_items_id',
         'language',
-        'pos'
+        'pos',
     ];
 
-    public function product(){
+    public function product()
+    {
         return $this->belongsTo(Products::class, 'products_items_id');
     }
 
@@ -36,7 +38,6 @@ class Reviews extends Model
         static::addGlobalScope(new AdminCoreOrderByPosScope());
         static::addGlobalScope(new AdminCoreOrderByCreatedAtScope());
     }
-
 
 
 }

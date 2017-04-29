@@ -17,7 +17,8 @@
                         <thead>
                         <tr>
                             <td colspan="4">
-                                <a href="{{route('admin.products.reviews.form')}}" class="btn btn-md btn-primary">Create</a>
+                                <a href="{{route('admin.products.reviews.form')}}"
+                                   class="btn btn-md btn-primary">Create</a>
                             </td>
                         </tr>
                         <tr>
