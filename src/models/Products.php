@@ -154,12 +154,12 @@ class Products extends Model
 
     public function setPromoFromAttribute($value)
     {
-        return $value ?: null;
+        $this->attributes['promo_from'] = $value ?: null;
     }
 
     public function setPromoToAttribute($value)
     {
-        return $value ?: null;
+        $this->attributes['promo_from'] = $value ?: null;
     }
 
 
