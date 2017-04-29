@@ -30,14 +30,9 @@ class ReviewsController extends Controller
     public function postForm(Request $request)
     {
 
-        $item = $request->has('id') ? Reviews::find($request->get('id')) : new Reviews();
+        $item = Reviews::firstOrCreate(['id' => $request->get('id')]);
         try{
-            $item->title = $request->get('title');
-            $item->description = $request->get('description');
-            $item->link = $request->get('link');
-            $item->products_items_id = $request->get('products_items_id');
-            $item->language = $request->get('language', config('app.fallback_locale'));
-            $item->save();
+            $item->update($request->only($item->getFillable()));
         }catch (\Exception $e){
             return redirect()->back()->withInput()->withErrors(['errors' => $e->getMessage()]);
         }

@@ -19,7 +19,7 @@ class CreateProductsOptionsTable extends Migration
                 $table->string('title_'.$locale, 255)->nullable();
                 $table->text('description_'.$locale)->nullable();
             }
-            $table->boolean('visible')->default(false)->index();
+            $table->boolean('viewable')->default(false)->index();
             $table->decimal('price', 7, 2)->nullable()->index();
             $table->decimal('promo_price', 7, 2)->nullable()->index();
             $table->string('code', 255)->nullable()->index();

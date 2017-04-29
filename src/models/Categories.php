@@ -20,6 +20,27 @@ class Categories extends Model
 
     protected $dates = ['deleted_at'];
 
+    protected $fillable = [
+        'categories_id',
+        'viewable',
+        'pos'
+    ];
+
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        foreach (config('app.locales', [config('app.fallback_locale', 'en')]) as $locale) {
+            $this->fillable = array_merge($this->fillable, [
+                'title_' . $locale,
+                'sub_title_' . $locale,
+                'description_' . $locale,
+                'meta_title_' . $locale,
+                'meta_description_' . $locale,
+                'meta_keywords_' . $locale,
+            ]);
+        }
+    }
+
     public function scopeVisible($q)
     {
         return $q->whereViewable(true);

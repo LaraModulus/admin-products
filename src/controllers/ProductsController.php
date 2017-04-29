@@ -39,31 +39,9 @@ class ProductsController extends Controller
     public function postForm(Request $request)
     {
 
-
-        $item = $request->has('id') ? Products::find($request->get('id')) : new Products();
+        $item = Products::firstOrCreate(['id' => $request->get('id')]);
         try{
-            foreach(config('app.locales', [config('app.fallback_locale', 'en')]) as $locale){
-                $item->{'title_'.$locale} = $request->get('title_'.$locale);
-                $item->{'sub_title_'.$locale} = $request->get('sub_title_'.$locale);
-                $item->{'short_description_'.$locale} = $request->get('short_description_'.$locale);
-                $item->{'description_'.$locale} = $request->get('description_'.$locale);
-                $item->{'table_info_'.$locale} = $request->get('table_info_'.$locale);
-                $item->{'meta_title_'.$locale} = $request->get('meta_title_'.$locale);
-                $item->{'meta_description_'.$locale} = $request->get('meta_description_'.$locale);
-                $item->{'meta_keywords_'.$locale} = $request->get('meta_keywords_'.$locale);
-            }
-            $item->viewable = $request->has('visible');
-            $item->price = (double)$request->get('price', 0);
-            $item->promo_price = (double)$request->get('promo_price', 0);
-            $item->promo_from = $request->get('promo_from') ?: null;
-            $item->promo_to = $request->get('promo_to') ?: null;
-            $item->code = $request->get('code');
-            $item->manufacturer_code = $request->get('manufacturer_code');
-            $item->weight = (double) $request->get('weight', 0);
-            $item->volume = (double) $request->get('volume',0);
-            $item->avlb_qty = (double) $request->get('avlb_qty', 0);
-
-            $item->save();
+            $item->update($request->only($item->getFillable()));
 
             $item->categories()->sync($request->get('item_categories', []));
             $files = [];

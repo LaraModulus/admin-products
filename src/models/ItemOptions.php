@@ -15,7 +15,7 @@ class ItemOptions extends Model
     protected $guarded = ['id'];
 
     protected $casts = [
-        'visible' => 'boolean',
+        'viewable' => 'boolean',
         'price' => 'decimal',
         'promo_price' => 'decimal',
         'weight' => 'decimal',
@@ -26,9 +26,32 @@ class ItemOptions extends Model
 
     protected $dates = ['deleted_at'];
 
+    protected $fillable = [
+        'viewable',
+        'price',
+        'promo_price',
+        'code',
+        'manufacturer_code',
+        'weight',
+        'volume',
+        'pos',
+        'products_items_id'
+    ];
+
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        foreach (config('app.locales', [config('app.fallback_locale', 'en')]) as $locale) {
+            $this->fillable = array_merge($this->fillable, [
+                'title_' . $locale,
+                'sub_title_' . $locale
+            ]);
+        }
+    }
+
     public function scopeVisible($q)
     {
-        return $q->whereVisible(true);
+        return $q->whereViewable(true);
     }
 
     public function getTitleAttribute(){
