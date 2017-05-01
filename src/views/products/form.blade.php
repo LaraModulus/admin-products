@@ -215,12 +215,12 @@
                             </div>
                             <div class="form-group">
                                 <label for="promo_from">Promo From</label>
-                                <input type="text" name="promo_from" id="promo_from" class="form-control"
+                                <input type="text" name="promo_from" id="promo_from" class="form-control datetimepicker"
                                        value="{{old('promo_from', $item->promo_from)}}">
                             </div>
                             <div class="form-group">
                                 <label for="promo_to">Promo to</label>
-                                <input type="text" name="promo_to" id="promo_to" class="form-control"
+                                <input type="text" name="promo_to" id="promo_to" class="form-control datetimepicker"
                                        value="{{old('promo_to', $item->promo_to)}}">
                             </div>
                             <div class="form-group">
