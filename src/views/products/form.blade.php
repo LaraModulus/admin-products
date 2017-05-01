@@ -89,7 +89,7 @@
 
                                         <textarea name="meta_description_{{$locale}}" id="meta_description_{{$locale}}"
                                                   cols="30" rows="3"
-                                                  class="form-control editor">{{old('meta_description_'.$locale, $item->{'meta_description_'.$locale})}}</textarea>
+                                                  class="form-control ">{{old('meta_description_'.$locale, $item->{'meta_description_'.$locale})}}</textarea>
                                     </div>
                                     <div class="form-group">
                                         <label for="meta_keywords_{{$locale}}" class="control-label">Meta
@@ -98,6 +98,7 @@
                                         <input type="text" class="form-control" name="meta_keywords_{{$locale}}"
                                                id="meta_keywords_{{$locale}}"
                                                placeholder=""
+                                               data-role="tagsinput"
                                                value="{{old('meta_keywords_'.$locale, $item->{'meta_keywords_'.$locale})}}">
 
                                     </div>
@@ -171,7 +172,7 @@
                         <div class="panel-body">
 
                             <div class="form-group">
-                                <label for="viewable">Visible?</label>
+                                <label for="visible">Visible?</label>
                                 <div class="checkbox">
                                     <input type="checkbox" value="1" id="viewable" name="viewable"
                                            @if($item->viewable || !$item->id) checked @endif>
