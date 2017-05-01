@@ -45,7 +45,9 @@ class ProductsController extends Controller
 
         $item = Products::firstOrCreate(['id' => $request->get('id')]);
         try {
-            $item->update($request->only($item->getFillable()));
+            $item->update(array_filter($request->only($item->getFillable()), function($key) use ($request, $item){
+                return in_array($key, array_keys($request->all())) || @$item->getCasts()[$key]=='boolean';
+            }, ARRAY_FILTER_USE_KEY));
 
             $item->categories()->sync($request->get('item_categories', []));
             $files = [];
