@@ -46,7 +46,7 @@
                 serverSide: true,
                 ajax: '{!! route('admin.products.items.datatable') !!}',
                 order: [
-                    [5, 'desc']
+                    [4, 'desc']
                 ],
                 columns: [
                     {data: 'id', name: 'ID'},
