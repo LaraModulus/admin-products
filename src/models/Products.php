@@ -93,6 +93,10 @@ class Products extends Model
         return $this->hasMany(Reviews::class, 'products_items_id');
     }
 
+    public function collections(){
+        return $this->belongsToMany(Collections::class,'products_item_collection','item_id','collection_id');
+    }
+
     public function getTitleAttribute()
     {
         return $this->{'title_' . config('app.fallback_locale', 'en')};

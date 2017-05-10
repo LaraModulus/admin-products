@@ -21,7 +21,11 @@ class ProductsController extends Controller
 
     public function index(Request $request)
     {
-        $this->data['items'] = Products::with(['files'])->paginate(20);
+        $items = Products::with(['files']);
+        if($request->has('q')){
+            $items->where('title_en', 'like', '%'.$request->get('q').'%');
+        }
+        $this->data['items'] = $items->paginate(20);
 
         if ($request->wantsJson()) {
             return response()->json($this->data);
@@ -50,6 +54,8 @@ class ProductsController extends Controller
             }, ARRAY_FILTER_USE_KEY));
 
             $item->categories()->sync($request->get('item_categories', []));
+            $item->collections()->sync($request->get('collections', []));
+            
             $files = [];
             if ($request->get('files') && Schema::hasTable('files_relations')) {
                 $files_data = json_decode($request->get('files'));

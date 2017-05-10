@@ -108,6 +108,30 @@
                             </div>
                         @endforeach
                     </div>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="item_categories">Categories</label>
+                                <select class="form-control select2" name="item_categories[]" id="item_categories"
+                                        multiple>
+                                    @foreach(\LaraMod\Admin\Products\Models\Categories::all() as $category)
+                                        <option value="{{$category->id}}"
+                                                @if(in_array($category->id, $item->categories->pluck('id')->toArray())) selected @endif
+                                        >{{$category->{'title_'.config('app.fallback_locale', 'en')} }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="collections_ids">Collections</label>
+                                {{--<input type="hidden" id="products_ids" name="products">--}}
+                                <select multiple class="form-control" name="collections[]" id="collections_ids">
+                                    @foreach($item->collections as $c)
+                                        <option value="{{$c->id}}">{{$c->title_en}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                     @if(class_exists(\LaraMod\Admin\Files\AdminFilesServiceProvider::class))
                         <div class="panel panel-default" data-ng-controller="filesContainerController">
                             <div class="panel-body">
@@ -223,17 +247,7 @@
                                 <input type="text" name="promo_to" id="promo_to" class="form-control datetimepicker"
                                        value="{{old('promo_to', $item->promo_to)}}">
                             </div>
-                            <div class="form-group">
-                                <label for="item_categories">Categories</label>
-                                <select class="form-control select2" name="item_categories[]" id="item_categories"
-                                        multiple>
-                                    @foreach(\LaraMod\Admin\Products\Models\Categories::all() as $category)
-                                        <option value="{{$category->id}}"
-                                                @if(in_array($category->id, $item->categories->pluck('id')->toArray())) selected @endif
-                                        >{{$category->{'title_'.config('app.fallback_locale', 'en')} }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+
                             <textarea class="hidden" name="files" id="files_input">@{{ files.item_files }}</textarea>
                             {{ csrf_field() }}
                             <button type="submit" class="btn btn-primary btn-lg btn-block">Save</button>
@@ -268,4 +282,64 @@
             });
         </script>
     @endif
+@stop
+@section('js')
+    <script type="text/javascript">
+        function formatItems (item) {
+            if (item.loading) return item.text;
+
+            var markup = '<ul class="list-unstyled">' +
+                '<li>['+item.id+'] ' + item.title_en + '</li>';
+
+            markup += '</ul>';
+
+            return markup;
+        }
+
+        function formatItemsSelection (item) {
+            return item.title_en;
+        }
+
+        $(document).ready(function(){
+
+            $("#collections_ids").select2({
+                theme: 'bootstrap',
+                multiple: true,
+                data: {!! $item->collections()->select(['id','title_en'])->get()->map(function($item){
+                        return [
+                            "id" => $item->id,
+                            "title_en" => $item->title_en
+                        ];
+                    }) !!},
+                ajax: {
+                    url: "{{route('admin.products.collections')}}",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            q: params.term, // search term
+                            page: params.page || 1
+                        };
+                    },
+                    processResults: function (data, params) {
+                        params.page = params.page || 1;
+                        return {
+                            results: data.items.data,
+                            pagination: {
+                                more: (params.page * 20) < data.items.total
+                            }
+                        };
+                    },
+                    cache: true
+                },
+                escapeMarkup: function (markup) { return markup; },
+                minimumInputLength: 1,
+                templateResult: formatItems,
+                templateSelection: formatItemsSelection //
+
+            })
+                .val({!! $item->collections->pluck('id') !!})
+                .trigger('change');
+        });
+    </script>
 @stop

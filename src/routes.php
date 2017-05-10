@@ -43,5 +43,15 @@ Route::group([
         Route::get('/datatable', ['as' => 'admin.products.reviews.datatable', 'uses' => 'ReviewsController@dataTable']);
     });
 
+    Route::group([
+        'prefix' => 'collections',
+    ], function(){
+        Route::get('/', ['as' => 'admin.products.collections', 'uses' => 'CollectionsController@index']);
+        Route::get('/form', ['as' => 'admin.products.collections.form', 'uses' => 'CollectionsController@getForm']);
+        Route::post('/form', ['as' => 'admin.products.collections.form', 'uses' => 'CollectionsController@postForm']);
+
+        Route::get('/delete', ['as' => 'admin.products.collections.delete', 'uses' => 'CollectionsController@delete']);
+        Route::get('/datatable', ['as' => 'admin.products.collections.datatable', 'uses' => 'CollectionsController@dataTable']);
+    });
 
 });
