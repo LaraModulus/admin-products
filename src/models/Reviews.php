@@ -25,6 +25,7 @@ class Reviews extends Model
         'products_items_id',
         'language',
         'pos',
+        'rating'
     ];
 
     public function product()

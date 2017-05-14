@@ -70,6 +70,14 @@
                                 </select>
                             </div>
                             <div class="form-group">
+                                <label for="rating">Rating</label>
+                                <select class="form-control" name="rating" id="rating">
+                                    @for($i=1; $i<=5; $i++)
+                                    <option value="{{$i}}" @if($i==$item->rating) selected @endif >{{$i}}</option>
+                                    @endfor
+                                </select>
+                            </div>
+                            <div class="form-group">
                                 <label for="products_items_id">Product</label>
                                 <select class="form-control select2" name="products_items_id" id="products_items_id">
                                     @foreach(\LaraMod\Admin\Products\Models\Products::all() as $p)

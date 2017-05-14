@@ -74,7 +74,7 @@ class ReviewsController extends Controller
 
     public function dataTable()
     {
-        $items = Reviews::select(['id', 'title', 'language', 'created_at', 'products_items_id']);
+        $items = Reviews::select(['id', 'title', 'language', 'created_at', 'products_items_id', 'rating']);
 
         return DataTables::of($items)
             ->addColumn('action', function ($item) {
@@ -82,6 +82,12 @@ class ReviewsController extends Controller
                         ['id' => $item->id]) . '" class="btn btn-success btn-xs"><i class="fa fa-pencil"></i></a>'
                     . '<a href="' . route('admin.products.reviews.delete',
                         ['id' => $item->id]) . '" class="btn btn-danger btn-xs require-confirm"><i class="fa fa-trash"></i></a>';
+            })
+            ->addColumn('rating', function($item){
+                $stars = '';
+                $stars.=str_repeat('<i class="fa fa-star text-primary"></i>', $item->rating);
+                $stars.=str_repeat('<i class="fa fa-star-o"></i>', 5-$item->rating);
+                return $stars;
             })
             ->addColumn('product_title', function ($item) {
                 if (!$item->product) {

@@ -24,7 +24,7 @@
                         <tr>
                             <th>#</th>
                             <th>Title</th>
-
+                            <th>Rating</th>
                             <th>Created date</th>
                             <th>Product</th>
                             <th><i class="fa fa-cogs"></i></th>
@@ -45,11 +45,12 @@
                 serverSide: true,
                 ajax: '{!! route('admin.products.reviews.datatable') !!}',
                 order: [
-                    [2, 'desc']
+                    [3, 'desc']
                 ],
                 columns: [
                     {data: 'id', name: 'ID'},
                     {data: 'title', name: 'title'},
+                    {data: 'rating', searchable: false},
                     {data: 'created_at', searchable: false},
                     {data: 'product_title', name: 'product_title', searchable: false, orderable: false},
                     {data: 'action', name: 'action', orderable: false, searchable: false}
