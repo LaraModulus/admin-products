@@ -4,7 +4,7 @@
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">Product categories</h1>
+                <h1 class="page-header">Collection</h1>
             </div>
             <!-- /.col-lg-12 -->
         </div>
@@ -23,7 +23,7 @@
             </div>
     @endif
     <!-- /.row -->
-        <form action="{{route('admin.products.categories.form', ['id' => $item->id])}}" method="post" role="form">
+        <form action="{{route('admin.products.collections.form', ['id' => $item->id])}}" method="post" role="form">
             <div class="row">
                 <div class="col-md-9">
                     <!-- TAB NAVIGATION -->
@@ -59,8 +59,17 @@
 
                                     </div>
                                     <div class="form-group">
+                                        <label for="short_description_{{$locale}}"
+                                               class="control-label">Short description </label>
+
+                                        <textarea name="short_description_{{$locale}}" id="short_description_{{$locale}}" cols="30"
+                                                  rows="10"
+                                                  class="form-control editor">{{old('short_description_'.$locale, $item->{'short_description_'.$locale})}}</textarea>
+                                    </div>
+
+                                    <div class="form-group">
                                         <label for="description_{{$locale}}"
-                                               class="control-label">Content </label>
+                                               class="control-label">Description </label>
 
                                         <textarea name="description_{{$locale}}" id="description_{{$locale}}" cols="30"
                                                   rows="10"
@@ -100,6 +109,18 @@
                             </div>
                         @endforeach
                     </div>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="products_ids">Products</label>
+                                <select multiple class="form-control" name="products[]" id="products_ids">
+                                    @foreach($item->products as $p)
+                                        <option value="{{$p->id}}">{{$p->title_en}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
 
 
                 </div>
@@ -113,18 +134,6 @@
                                            @if($item->viewable || !$item->id) checked @endif>
                                 </div>
                             </div>
-                            @if(\LaraMod\Admin\Products\Models\Categories::where('id', '!=', $item->id)->count())
-                                <div class="form-group">
-                                    <label for="categories_id">Categories</label>
-                                    <select class="form-control select2" name="categories_id" id="categories_id">
-                                        <option value="0">This is parent category</option>
-                                        @foreach(\LaraMod\Admin\Products\Models\Categories::where('id', '!=', $item->id)->get() as $c)
-                                            <option value="{{$c->id}}"
-                                                    @if($c->id==$item->categories_id) selected @endif>{{$c->title}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            @endif
                             {{ csrf_field() }}
                             <button type="submit" class="btn btn-primary btn-lg btn-block">Save</button>
                         </div>
@@ -135,4 +144,64 @@
 
 
     </div>
+@stop
+@section('js')
+    <script type="text/javascript">
+        function formatItems (item) {
+            if (item.loading) return item.text;
+
+            var markup = '<ul class="list-unstyled">' +
+                '<li>['+item.id+'] ' + item.title_en + '</li>';
+
+            markup += '</ul>';
+
+            return markup;
+        }
+
+        function formatItemsSelection (item) {
+            return item.title_en;
+        }
+
+        $(document).ready(function(){
+
+            $("#products_ids").select2({
+                theme: 'bootstrap',
+                multiple: true,
+                data: {!! $item->products()->select(['id','title_en'])->get()->map(function($item){
+                        return [
+                            "id" => $item->id,
+                            "title_en" => $item->title_en
+                        ];
+                    }) !!},
+                ajax: {
+                    url: "{{route('admin.products.items')}}",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            q: params.term, // search term
+                            page: params.page || 1
+                        };
+                    },
+                    processResults: function (data, params) {
+                        params.page = params.page || 1;
+                        return {
+                            results: data.items.data,
+                            pagination: {
+                                more: (params.page * 20) < data.items.total
+                            }
+                        };
+                    },
+                    cache: true
+                },
+                escapeMarkup: function (markup) { return markup; },
+                minimumInputLength: 1,
+                templateResult: formatItems,
+                templateSelection: formatItemsSelection //
+
+            })
+                .val({!! $item->products->pluck('id') !!})
+                .trigger('change');
+        });
+    </script>
 @stop

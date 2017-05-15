@@ -64,18 +64,28 @@
                                 <label for="language">Language</label>
                                 <select class="form-control selector" name="language" id="language">
                                     @foreach(config('app.locales', [config('app.fallback_locale')]) as $language)
-                                        <option value="{{$language}}" @if($item->language == $language) selected @endif>{{$language}}</option>
+                                        <option value="{{$language}}"
+                                                @if($item->language == $language) selected @endif>{{$language}}</option>
                                     @endforeach
                                 </select>
                             </div>
-                                <div class="form-group">
-                                    <label for="products_items_id">Product</label>
-                                    <select class="form-control selector" name="products_items_id" id="products_items_id">
-                                        @foreach(\LaraMod\Admin\Products\Models\Products::all() as $p)
-                                            <option value="{{$p->id}}" @if($item->product && $p->id==$item->product->id) selected @endif>{{$p->title}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                            <div class="form-group">
+                                <label for="rating">Rating</label>
+                                <select class="form-control" name="rating" id="rating">
+                                    @for($i=1; $i<=5; $i++)
+                                    <option value="{{$i}}" @if($i==$item->rating) selected @endif >{{$i}}</option>
+                                    @endfor
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="products_items_id">Product</label>
+                                <select class="form-control select2" name="products_items_id" id="products_items_id">
+                                    @foreach(\LaraMod\Admin\Products\Models\Products::all() as $p)
+                                        <option value="{{$p->id}}"
+                                                @if($item->product && $p->id==$item->product->id) selected @endif>{{$p->title}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                             {{ csrf_field() }}
                             <button type="submit" class="btn btn-primary btn-lg btn-block">Save</button>
                         </div>

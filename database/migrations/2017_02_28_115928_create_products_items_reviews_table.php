@@ -22,6 +22,7 @@ class CreateProductsItemsReviewsTable extends Migration
             $table->integer('products_items_id')->unsigned()->index();
             $table->string('language', 3)->default('en')->index();
             $table->smallInteger('pos')->default(0)->index();
+            $table->tinyInteger('rating')->unsigned();
 
         });
     }

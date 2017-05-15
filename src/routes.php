@@ -2,14 +2,14 @@
 use Illuminate\Support\Facades\Route;
 
 Route::group([
-    'prefix' => 'admin/products',
+    'prefix'     => 'admin/products',
     'middleware' => ['admin', 'auth.admin'],
-    'namespace' => 'LaraMod\Admin\Products\Controllers',
-], function(){
+    'namespace'  => 'LaraMod\Admin\Products\Controllers',
+], function () {
     Route::get('/', ['uses' => 'ProductsController@index']);
     Route::group([
-        'prefix' => 'items'
-    ], function(){
+        'prefix' => 'items',
+    ], function () {
         Route::get('/', ['as' => 'admin.products.items', 'uses' => 'ProductsController@index']);
         Route::get('/form', ['as' => 'admin.products.items.form', 'uses' => 'ProductsController@getForm']);
         Route::post('/form', ['as' => 'admin.products.items.form', 'uses' => 'ProductsController@postForm']);
@@ -20,20 +20,21 @@ Route::group([
     });
 
     Route::group([
-        'prefix' => 'categories'
-    ], function(){
+        'prefix' => 'categories',
+    ], function () {
         Route::get('/', ['as' => 'admin.products.categories', 'uses' => 'CategoriesController@index']);
         Route::get('/form', ['as' => 'admin.products.categories.form', 'uses' => 'CategoriesController@getForm']);
         Route::post('/form', ['as' => 'admin.products.categories.form', 'uses' => 'CategoriesController@postForm']);
 
         Route::get('/delete', ['as' => 'admin.products.categories.delete', 'uses' => 'CategoriesController@delete']);
 
-        Route::get('/datatable', ['as' => 'admin.products.categories.datatable', 'uses' => 'CategoriesController@dataTable']);
+        Route::get('/datatable',
+            ['as' => 'admin.products.categories.datatable', 'uses' => 'CategoriesController@dataTable']);
     });
 
     Route::group([
-        'prefix' => 'reviews'
-    ], function(){
+        'prefix' => 'reviews',
+    ], function () {
         Route::get('/', ['as' => 'admin.products.reviews', 'uses' => 'ReviewsController@index']);
         Route::get('/form', ['as' => 'admin.products.reviews.form', 'uses' => 'ReviewsController@getForm']);
         Route::post('/form', ['as' => 'admin.products.reviews.form', 'uses' => 'ReviewsController@postForm']);
@@ -42,5 +43,15 @@ Route::group([
         Route::get('/datatable', ['as' => 'admin.products.reviews.datatable', 'uses' => 'ReviewsController@dataTable']);
     });
 
+    Route::group([
+        'prefix' => 'collections',
+    ], function(){
+        Route::get('/', ['as' => 'admin.products.collections', 'uses' => 'CollectionsController@index']);
+        Route::get('/form', ['as' => 'admin.products.collections.form', 'uses' => 'CollectionsController@getForm']);
+        Route::post('/form', ['as' => 'admin.products.collections.form', 'uses' => 'CollectionsController@postForm']);
+
+        Route::get('/delete', ['as' => 'admin.products.collections.delete', 'uses' => 'CollectionsController@delete']);
+        Route::get('/datatable', ['as' => 'admin.products.collections.datatable', 'uses' => 'CollectionsController@dataTable']);
+    });
 
 });

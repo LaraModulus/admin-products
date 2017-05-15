@@ -1,4 +1,5 @@
 <?php
+
 namespace LaraMod\Admin\Products\Models;
 
 use LaraMod\Admin\Core\Scopes\AdminCoreOrderByCreatedAtScope;
@@ -17,7 +18,18 @@ class Reviews extends Model
 
     protected $dates = ['deleted_at'];
 
-    public function product(){
+    protected $fillable = [
+        'title',
+        'description',
+        'link',
+        'products_items_id',
+        'language',
+        'pos',
+        'rating'
+    ];
+
+    public function product()
+    {
         return $this->belongsTo(Products::class, 'products_items_id');
     }
 
@@ -27,7 +39,6 @@ class Reviews extends Model
         static::addGlobalScope(new AdminCoreOrderByPosScope());
         static::addGlobalScope(new AdminCoreOrderByCreatedAtScope());
     }
-
 
 
 }

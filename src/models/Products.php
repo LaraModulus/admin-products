@@ -1,4 +1,5 @@
 <?php
+
 namespace LaraMod\Admin\Products\Models;
 
 use LaraMod\Admin\Core\Scopes\AdminCoreOrderByCreatedAtScope;
@@ -16,19 +17,50 @@ class Products extends Model
     protected $guarded = ['id'];
 
     protected $casts = [
-        'viewable' => 'boolean',
-        'price' => 'decimal',
+        'viewable'    => 'boolean',
+        'price'       => 'decimal',
         'promo_price' => 'decimal',
-        'weight' => 'decimal',
-        'volume' => 'decimal',
-        'avlb_qty' => 'integer',
-        'pos' => 'integer',
-        'table_info' => 'object'
+        'weight'      => 'decimal',
+        'volume'      => 'decimal',
+        'avlb_qty'    => 'integer',
+        'pos'         => 'integer',
+        'table_info'  => 'object',
     ];
 
     protected $dates = ['deleted_at', 'promo_from', 'promo_to'];
 
     protected $appends = ['title', 'price_final'];
+
+
+    protected $fillable = [
+        'viewable',
+        'price',
+        'promo_price',
+        'promo_from',
+        'promo_to',
+        'code',
+        'manufacturer_code',
+        'weight',
+        'volume',
+        'avlb_qty',
+    ];
+
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        foreach (config('app.locales', [config('app.fallback_locale', 'en')]) as $locale) {
+            $this->fillable = array_merge($this->fillable, [
+                'title_' . $locale,
+                'sub_title_' . $locale,
+                'short_description_' . $locale,
+                'description_' . $locale,
+                'table_info_' . $locale,
+                'meta_title_' . $locale,
+                'meta_description_' . $locale,
+                'meta_keywords_' . $locale,
+            ]);
+        }
+    }
 
     public function scopeVisible($q)
     {
@@ -37,7 +69,8 @@ class Products extends Model
 
     public function categories()
     {
-        return $this->belongsToMany(Categories::class, 'products_item_categories','products_items_id', 'products_categories_id');
+        return $this->belongsToMany(Categories::class, 'products_item_categories', 'products_items_id',
+            'products_categories_id');
     }
 
     public function options()
@@ -47,44 +80,65 @@ class Products extends Model
 
     public function linked()
     {
-        return $this->belongsToMany(Products::class,'products_linked_items', 'item1_id','item2_id');
+        return $this->belongsToMany(Products::class, 'products_linked_items', 'item1_id', 'item2_id');
     }
 
-    public function files(){
-        return $this->morphToMany(Files::class,'relation','files_relations','relation_id', 'files_id');
+    public function files()
+    {
+        return $this->morphToMany(Files::class, 'relation', 'files_relations', 'relation_id', 'files_id');
     }
 
     public function reviews()
     {
-        return $this->hasMany(Reviews::class,'products_items_id');
+        return $this->hasMany(Reviews::class, 'products_items_id');
     }
 
-    public function getTitleAttribute(){
-        return $this->{'title_'.config('app.fallback_locale', 'en')};
-    }
-    public function getSubTitleAttribute(){
-        return $this->{'sub_title_'.config('app.fallback_locale', 'en')};
-    }
-    public function getShortDescriptionAttribute(){
-        return $this->{'short_description_'.config('app.fallback_locale', 'en')};
-    }
-    public function getDescriptionAttribute(){
-        return $this->{'description_'.config('app.fallback_locale', 'en')};
-    }
-    public function getTableInfoAttribute(){
-        return $this->{'table_info_'.config('app.fallback_locale', 'en')};
-    }
-    public function getMetaTitleAttribute(){
-        return $this->{'meta_title_'.config('app.fallback_locale', 'en')};
-    }
-    public function getMetaDescriptionAttribute(){
-        return $this->{'meta_description_'.config('app.fallback_locale', 'en')};
-    }
-    public function getMetaKeywordsAttribute(){
-        return $this->{'meta_keywords_'.config('app.fallback_locale', 'en')};
+    public function collections(){
+        return $this->belongsToMany(Collections::class,'products_item_collection','item_id','collection_id');
     }
 
-    public function getPriceFinalAttribute(){
+    public function getTitleAttribute()
+    {
+        return $this->{'title_' . config('app.fallback_locale', 'en')};
+    }
+
+    public function getSubTitleAttribute()
+    {
+        return $this->{'sub_title_' . config('app.fallback_locale', 'en')};
+    }
+
+    public function getShortDescriptionAttribute()
+    {
+        return $this->{'short_description_' . config('app.fallback_locale', 'en')};
+    }
+
+    public function getDescriptionAttribute()
+    {
+        return $this->{'description_' . config('app.fallback_locale', 'en')};
+    }
+
+    public function getTableInfoAttribute()
+    {
+        return $this->{'table_info_' . config('app.fallback_locale', 'en')};
+    }
+
+    public function getMetaTitleAttribute()
+    {
+        return $this->{'meta_title_' . config('app.fallback_locale', 'en')};
+    }
+
+    public function getMetaDescriptionAttribute()
+    {
+        return $this->{'meta_description_' . config('app.fallback_locale', 'en')};
+    }
+
+    public function getMetaKeywordsAttribute()
+    {
+        return $this->{'meta_keywords_' . config('app.fallback_locale', 'en')};
+    }
+
+    public function getPriceFinalAttribute()
+    {
         return (double)($this->promo_price > 0 && strtotime($this->promo_from) < time() && strtotime($this->promo_to) > time() ? $this->promo_price : $this->price);
     }
 
@@ -93,11 +147,24 @@ class Products extends Model
         return ($this->promo_price > 0 && strtotime($this->promo_from) < time() && strtotime($this->promo_to) > time() ? true : false);
     }
 
-    public function getPromoDiscountAttribute(){
-        if(!$this->is_promo) return 0;
-        return 100-ceil(($this->promo_price / $this->price)*100);
+    public function getPromoDiscountAttribute()
+    {
+        if (!$this->is_promo) {
+            return 0;
+        }
+
+        return 100 - ceil(($this->promo_price / $this->price) * 100);
     }
 
+    public function setPromoFromAttribute($value)
+    {
+        $this->attributes['promo_from'] = $value ?: null;
+    }
+
+    public function setPromoToAttribute($value)
+    {
+        $this->attributes['promo_to'] = $value ?: null;
+    }
 
 
     protected function bootIfNotBooted()
@@ -106,7 +173,6 @@ class Products extends Model
         static::addGlobalScope(new AdminCoreOrderByPosScope());
         static::addGlobalScope(new AdminCoreOrderByCreatedAtScope());
     }
-
 
 
 }

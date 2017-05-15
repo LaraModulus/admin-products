@@ -3,7 +3,7 @@
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">Products</h1>
+                <h1 class="page-header">Collections</h1>
             </div>
             <!-- /.col-lg-12 -->
         </div>
@@ -17,13 +17,12 @@
                         <thead>
                         <tr>
                             <td colspan="4">
-                                <a href="{{route('admin.products.items.form')}}"
+                                <a href="{{route('admin.products.collections.form')}}"
                                    class="btn btn-md btn-primary">Create</a>
                             </td>
                         </tr>
                         <tr>
                             <th>#</th>
-                            <th>Code</th>
                             <th>Title</th>
                             <th>Status</th>
                             <th>Created date</th>
@@ -44,13 +43,12 @@
             $('#items_table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{!! route('admin.products.items.datatable') !!}',
+                ajax: '{!! route('admin.products.collections.datatable') !!}',
                 order: [
-                    [4, 'desc']
+                    [3, 'desc']
                 ],
                 columns: [
                     {data: 'id', name: 'ID'},
-                    {data: 'code', 'name': 'code'},
                     {data: 'title_en', name: 'title_en'},
                     {data: 'status', searchable: false, orderable: false},
                     {data: 'created_at', searchable: false},

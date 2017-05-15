@@ -13,12 +13,12 @@ class AdminProductsServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->loadViewsFrom(__DIR__.'/views', 'adminproducts');
+        $this->loadViewsFrom(__DIR__ . '/views', 'adminproducts');
         $this->publishes([
-            __DIR__.'/views' => base_path('resources/views/laramod/admin/products'),
+            __DIR__ . '/views' => base_path('resources/views/laramod/admin/products'),
         ]);
         $this->publishes([
-            __DIR__.'/../database/migrations/' => database_path('migrations')
+            __DIR__ . '/../database/migrations/' => database_path('migrations'),
         ], 'migrations');
 
     }
@@ -30,6 +30,6 @@ class AdminProductsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        include __DIR__.'/routes.php';
+        include __DIR__ . '/routes.php';
     }
 }
