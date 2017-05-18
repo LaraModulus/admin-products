@@ -54,4 +54,16 @@ Route::group([
         Route::get('/datatable', ['as' => 'admin.products.collections.datatable', 'uses' => 'CollectionsController@dataTable']);
     });
 
+    Route::group([
+        'prefix' => 'brands',
+    ], function(){
+        Route::get('/', ['as' => 'admin.products.brands', 'uses' => 'BrandsController@index']);
+        Route::get('/form', ['as' => 'admin.products.brands.form', 'uses' => 'BrandsController@getForm']);
+        Route::post('/form', ['as' => 'admin.products.brands.form', 'uses' => 'BrandsController@postForm']);
+
+        Route::get('/delete', ['as' => 'admin.products.brands.delete', 'uses' => 'BrandsController@delete']);
+        Route::get('/datatable', ['as' => 'admin.products.brands.datatable', 'uses' => 'BrandsController@dataTable']);
+        Route::get('/autocomplete', ['as' => 'admin.products.brands.autocomplete', 'uses' => 'BrandsController@getAutocomplete']);
+    });
+
 });

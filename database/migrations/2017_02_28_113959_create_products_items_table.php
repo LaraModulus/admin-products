@@ -38,6 +38,8 @@ class CreateProductsItemsTable extends Migration
             $table->decimal('volume', 7, 2)->default(0)->index();
             $table->smallInteger('avlb_qty')->default(0)->index();
             $table->smallInteger('pos')->default(0)->index();
+            $table->boolean('subtract_qty')->default(false);
+            $table->integer('brand_id')->unsigned()->nullable()->index();
 
 
         });

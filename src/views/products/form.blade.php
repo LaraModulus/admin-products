@@ -203,14 +203,9 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="weight">Weight</label>
-                                <input type="text" name="weight" id="weight" class="form-control"
-                                       value="{{old('weight', $item->weight)}}">
-                            </div>
-                            <div class="form-group">
-                                <label for="volume">Valume</label>
-                                <input type="text" name="volume" id="volume" class="form-control"
-                                       value="{{old('volume', $item->volume)}}">
+                                <label for="price">Price</label>
+                                <input type="text" name="price" id="price" class="form-control"
+                                       value="{{old('price', $item->price)}}">
                             </div>
                             <div class="form-group">
                                 <label for="avlb_qty">Available quantity</label>
@@ -218,19 +213,11 @@
                                        value="{{old('avlb_qty', $item->avlb_qty)}}">
                             </div>
                             <div class="form-group">
-                                <label for="code">Code</label>
-                                <input type="text" name="code" id="code" class="form-control"
-                                       value="{{old('code', $item->code)}}">
-                            </div>
-                            <div class="form-group">
-                                <label for="manufacturer_code">Manufacturer code</label>
-                                <input type="text" name="manufacturer_code" id="manufacturer_code" class="form-control"
-                                       value="{{old('manufacturer_code', $item->manufacturer_code)}}">
-                            </div>
-                            <div class="form-group">
-                                <label for="price">Price</label>
-                                <input type="text" name="price" id="price" class="form-control"
-                                       value="{{old('price', $item->price)}}">
+                                <label for="subtract_qty">Subtract quantity?</label>
+                                <div class="checkbox">
+                                    <input type="checkbox" value="1" id="subtract_qty" name="subtract_qty"
+                                           @if($item->substract_qty) checked @endif>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label for="promo_price">Promo price</label>
@@ -247,6 +234,36 @@
                                 <input type="text" name="promo_to" id="promo_to" class="form-control datetimepicker"
                                        value="{{old('promo_to', $item->promo_to)}}">
                             </div>
+                            <div class="form-group">
+                                <label for="weight">Weight</label>
+                                <input type="text" name="weight" id="weight" class="form-control"
+                                       value="{{old('weight', $item->weight)}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="volume">Valume</label>
+                                <input type="text" name="volume" id="volume" class="form-control"
+                                       value="{{old('volume', $item->volume)}}">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="code">Code</label>
+                                <input type="text" name="code" id="code" class="form-control"
+                                       value="{{old('code', $item->code)}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="manufacturer_code">Manufacturer code</label>
+                                <input type="text" name="manufacturer_code" id="manufacturer_code" class="form-control"
+                                       value="{{old('manufacturer_code', $item->manufacturer_code)}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="brand">Brand</label>
+                                <select class="form-control" name="brand" id="brand" multiple tabindex="-1" aria-hidden="true">
+                                    @foreach(\LaraMod\Admin\Products\Models\Brands::all() as $brand)
+                                    <option id="{{$brand->id}}" @if($item->brand_id==$brand->id) selected @endif >{{$brand->{'title_'.config('app.fallback_locale', 'en')} }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
 
                             <textarea class="hidden" name="files" id="files_input">@{{ files.item_files }}</textarea>
                             {{ csrf_field() }}
@@ -285,6 +302,7 @@
 @stop
 @section('js')
     <script type="text/javascript">
+
         function formatItems (item) {
             if (item.loading) return item.text;
 
@@ -301,6 +319,12 @@
         }
 
         $(document).ready(function(){
+            $('#brand').select2({
+                theme: 'bootstrap',
+                tags: true,
+                placeholder: 'Type brand name',
+                maximumSelectionLength: 1
+            });
 
             $("#collections_ids").select2({
                 theme: 'bootstrap',

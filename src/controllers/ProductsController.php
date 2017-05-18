@@ -3,6 +3,7 @@
 namespace LaraMod\Admin\Products\Controllers;
 
 use App\Http\Controllers\Controller;
+use LaraMod\Admin\Products\Models\Brands;
 use LaraMod\Admin\Products\Models\Products;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
@@ -49,6 +50,15 @@ class ProductsController extends Controller
 
         $item = Products::firstOrCreate(['id' => $request->get('id')]);
         try {
+            if($request->has('brand')){
+                $brand = Brands::where('title_'.config('app.fallback_locale', 'en'),'LIKE',$request->get('brand'))->first();
+                if(!$brand){
+                    $brand = new Brands();
+                    $brand->{'title_'.config('app.fallback_locale', 'en')} = $request->get('brand');
+                    $brand->save();
+                }
+                $request->merge(['brand_id' => $brand->id]);
+            }
             $item->update(array_filter($request->only($item->getFillable()), function($key) use ($request, $item){
                 return in_array($key, array_keys($request->all())) || @$item->getCasts()[$key]=='boolean';
             }, ARRAY_FILTER_USE_KEY));

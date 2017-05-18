@@ -25,6 +25,7 @@ class Products extends Model
         'avlb_qty'    => 'integer',
         'pos'         => 'integer',
         'table_info'  => 'object',
+        'subtract_qty' => 'boolean',
     ];
 
     protected $dates = ['deleted_at', 'promo_from', 'promo_to'];
@@ -43,6 +44,8 @@ class Products extends Model
         'weight',
         'volume',
         'avlb_qty',
+        'subtract_qty',
+        'brand_id'
     ];
 
     public function __construct(array $attributes = [])
@@ -95,6 +98,11 @@ class Products extends Model
 
     public function collections(){
         return $this->belongsToMany(Collections::class,'products_item_collection','item_id','collection_id');
+    }
+
+    public function brand()
+    {
+        return $this->hasOne(Brands::class, 'id', 'brand_id');
     }
 
     public function getTitleAttribute()
