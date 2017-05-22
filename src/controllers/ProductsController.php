@@ -4,6 +4,7 @@ namespace LaraMod\Admin\Products\Controllers;
 
 use App\Http\Controllers\Controller;
 use LaraMod\Admin\Products\Models\Brands;
+use LaraMod\Admin\Products\Models\Options;
 use LaraMod\Admin\Products\Models\Products;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
@@ -37,7 +38,7 @@ class ProductsController extends Controller
 
     public function getForm(Request $request)
     {
-        $this->data['item'] = ($request->has('id') ? Products::with(['files'])->find($request->get('id')) : new Products());
+        $this->data['item'] = ($request->has('id') ? Products::with(['files', 'options'])->find($request->get('id')) : new Products());
         if ($request->wantsJson()) {
             return response()->json($this->data);
         }
@@ -65,7 +66,23 @@ class ProductsController extends Controller
 
             $item->categories()->sync($request->get('item_categories', []));
             $item->collections()->sync($request->get('collections', []));
-            
+            $product_options = [];
+            $options = collect(json_decode($request->get('options')));
+            if($options){
+                foreach($options as $opt){
+                    $o = Options::firstOrCreate(['title_en' => $opt->title_en]);
+                    $product_options[$o->id] = [
+                        'price' => $opt->pivot->price,
+                        'promo_price' => $opt->pivot->promo_price,
+                        'code' => $opt->pivot->code,
+                        'manufacturer_code' => $opt->pivot->manufacturer_code,
+                        'weight' => $opt->pivot->weight,
+                        'volume' => $opt->pivot->volume,
+                        'avlb_qty' => $opt->pivot->avlb_qty
+                    ];
+                }
+            }
+            $item->options()->sync($product_options);
             $files = [];
             if ($request->get('files') && Schema::hasTable('files_relations')) {
                 $files_data = json_decode($request->get('files'));

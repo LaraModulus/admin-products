@@ -110,26 +110,67 @@
                     </div>
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            <div class="form-group">
-                                <label for="item_categories">Categories</label>
-                                <select class="form-control select2" name="item_categories[]" id="item_categories"
-                                        multiple>
-                                    @foreach(\LaraMod\Admin\Products\Models\Categories::all() as $category)
-                                        <option value="{{$category->id}}"
-                                                @if(in_array($category->id, $item->categories->pluck('id')->toArray())) selected @endif
-                                        >{{$category->{'title_'.config('app.fallback_locale', 'en')} }}</option>
-                                    @endforeach
-                                </select>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="item_categories">Categories</label>
+                                        <select class="form-control select2" name="item_categories[]" id="item_categories"
+                                                multiple>
+                                            @foreach(\LaraMod\Admin\Products\Models\Categories::all() as $category)
+                                                <option value="{{$category->id}}"
+                                                        @if(in_array($category->id, $item->categories->pluck('id')->toArray())) selected @endif
+                                                >{{$category->{'title_'.config('app.fallback_locale', 'en')} }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="collections_ids">Collections</label>
+                                        {{--<input type="hidden" id="products_ids" name="products">--}}
+                                        <select multiple class="form-control" name="collections[]" id="collections_ids">
+                                            @foreach($item->collections as $c)
+                                                <option value="{{$c->id}}">{{$c->title_en}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="collections_ids">Collections</label>
-                                {{--<input type="hidden" id="products_ids" name="products">--}}
-                                <select multiple class="form-control" name="collections[]" id="collections_ids">
-                                    @foreach($item->collections as $c)
-                                        <option value="{{$c->id}}">{{$c->title_en}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Product options
+                        </div>
+                        <div class="panel-body">
+                            <button type="button" class="btn btn-primary" data-ng-click="newOption()">Add</button>
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Code</th>
+                                    <th>Price</th>
+                                    <th>Promo price</th>
+                                    <th>Available quantity</th>
+                                    <th><i class="fa fa-cogs"></i></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr data-ng-repeat="opt in product_options track by $index">
+                                    <td>@{{ opt.title_en }}</td>
+                                    <td>@{{ opt.pivot.code }}</td>
+                                    <td>@{{ opt.pivot.price }}</td>
+                                    <td>@{{ opt.pivot.promo_price }}</td>
+                                    <td>@{{ opt.pivot.avlb_qty }}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-success btn-xs" data-ng-click="editOption($index)"><i class="fa fa-pencil"></i></button>
+                                        <button type="button" class="btn btn-danger btn-xs" data-ng-click="deleteOption($index)"><i class="fa fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                     @if(class_exists(\LaraMod\Admin\Files\AdminFilesServiceProvider::class))
@@ -257,14 +298,10 @@
                             </div>
                             <div class="form-group">
                                 <label for="brand">Brand</label>
-                                <select class="form-control" name="brand" id="brand" multiple tabindex="-1" aria-hidden="true">
-                                    @foreach(\LaraMod\Admin\Products\Models\Brands::all() as $brand)
-                                    <option id="{{$brand->id}}" @if($item->brand_id==$brand->id) selected @endif >{{$brand->{'title_'.config('app.fallback_locale', 'en')} }}</option>
-                                    @endforeach
-                                </select>
+                                <input class="form-control" name="brand" id="brand" value="{{$item->brand->title_en}}">
                             </div>
 
-
+                            <textarea class="hidden" name="options" id="options">@{{ product_options }}</textarea>
                             <textarea class="hidden" name="files" id="files_input">@{{ files.item_files }}</textarea>
                             {{ csrf_field() }}
                             <button type="submit" class="btn btn-primary btn-lg btn-block">Save</button>
@@ -274,6 +311,78 @@
             </div>
         </form>
 
+        <div class="modal fade" id="optionModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Add/Edit option</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Option title</label>
+                                    <input type="text" class="form-control" data-ng-model="option.title_en" name="option_title" id="option_title" title="Option title" placeholder="Option name">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Option price</label>
+                                    <input type="text" class="form-control" data-ng-model="option.pivot.price" name="option_price" title="Option price" placeholder="Option price">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Promo price</label>
+                                    <input type="text" class="form-control" data-ng-model="option.pivot.promo_price" name="promo_option_price" title="Promo price" placeholder="Promo price">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Code</label>
+                                    <input type="text" class="form-control" data-ng-model="option.pivot.code" name="option_code" title="Option code" placeholder="Option code">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Manufacturer code</label>
+                                    <input type="text" class="form-control" data-ng-model="option.pivot.manufacturer_code" name="option_manufacturer_code" title="Option manufacturer" placeholder="Manufacturer code">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Weight</label>
+                                    <input type="text" class="form-control" data-ng-model="option.pivot.weight" name="option_weight" title="Option weight" placeholder="Weight">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Volume</label>
+                                    <input type="text" class="form-control" data-ng-model="option.pivot.volume" name="option_volume" title="Option volume" placeholder="Volume">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Avail. quantity</label>
+                                    <input type="text" class="form-control" data-ng-model="option.pivot.avlb_qty" name="option_qty" title="Available quantity" placeholder="Qty">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" data-ng-click="saveOption()">Save</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
 
     </div>
     @if(class_exists(\LaraMod\Admin\Files\AdminFilesServiceProvider::class))
@@ -281,6 +390,10 @@
             app.controller('productController', function ($scope, $http, SweetAlert, CSRF_TOKEN, $window, Files) {
                 $scope.files = Files;
                 $scope.files_loading = false;
+                $scope.option = {
+                    "pivot": {}
+                };
+                $scope.product_options = [];
 
                 $scope.$watch($scope.files, function (newVal, oldVal) {
                     Files = $scope.files;
@@ -290,10 +403,37 @@
                     .then(function (response) {
                         if (response.data.item.files) {
                             $scope.files.item_files = response.data.item.files;
+                            $scope.product_options = response.data.item.options;
                         }
                     });
                 $scope.removeFile = function (idx) {
                     $scope.files.item_files.splice(idx, 1);
+                };
+
+                $scope.newOption = function(){
+                  $scope.option = {"pivot": {}};
+                  $('#optionModal').modal('show');
+                };
+                $scope.saveOption = function(){
+                    var done = false;
+                    for(i=0;i<$scope.product_options.length; i++){
+                        if($scope.option.title_en == $scope.product_options[i].title_en){
+                            done = true;
+                            break;
+                        }
+                    }
+                    if(done===false){
+                        $scope.product_options.push($scope.option);
+                    }
+                    $scope.option = {};
+                    $('#optionModal').modal('hide');
+                };
+                $scope.editOption = function(idx){
+                  $scope.option = $scope.product_options[idx];
+                  $('#optionModal').modal('show');
+                };
+                $scope.deleteOption = function(idx){
+                    $scope.product_options.splice(idx, 1);
                 };
 
             });
@@ -319,11 +459,12 @@
         }
 
         $(document).ready(function(){
-            $('#brand').select2({
-                theme: 'bootstrap',
-                tags: true,
-                placeholder: 'Type brand name',
-                maximumSelectionLength: 1
+            $('#option_title').autocomplete({
+                appendTo: '#optionModal',
+                source: {!! \LaraMod\Admin\Products\Models\Options::all()->pluck('title_en') !!}
+            });
+            $('#brand').autocomplete({
+                source: {!! \LaraMod\Admin\Products\Models\Brands::all()->pluck('title_en') !!}
             });
 
             $("#collections_ids").select2({

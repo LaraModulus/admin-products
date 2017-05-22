@@ -78,7 +78,8 @@ class Products extends Model
 
     public function options()
     {
-        return $this->hasMany(ItemOptions::class, 'products_items_id');
+        return $this->belongsToMany(Options::class, 'products_item_options', 'products_item_id',
+            'products_option_id')->withPivot(['viewable', 'price', 'promo_price', 'code', 'manufacturer_code', 'weight', 'volume', 'avlb_qty','pos']);
     }
 
     public function linked()
