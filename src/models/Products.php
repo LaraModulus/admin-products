@@ -25,6 +25,7 @@ class Products extends Model
         'avlb_qty'    => 'integer',
         'pos'         => 'integer',
         'table_info'  => 'object',
+        'subtract_qty' => 'boolean',
     ];
 
     protected $dates = ['deleted_at', 'promo_from', 'promo_to'];
@@ -43,6 +44,8 @@ class Products extends Model
         'weight',
         'volume',
         'avlb_qty',
+        'subtract_qty',
+        'brand_id'
     ];
 
     public function __construct(array $attributes = [])
@@ -75,7 +78,8 @@ class Products extends Model
 
     public function options()
     {
-        return $this->hasMany(ItemOptions::class, 'products_items_id');
+        return $this->belongsToMany(Options::class, 'products_item_options', 'products_item_id',
+            'products_option_id')->withPivot(['viewable', 'price', 'promo_price', 'code', 'manufacturer_code', 'weight', 'volume', 'avlb_qty','pos']);
     }
 
     public function linked()
@@ -88,6 +92,12 @@ class Products extends Model
         return $this->morphToMany(Files::class, 'relation', 'files_relations', 'relation_id', 'files_id');
     }
 
+    public function characteristics()
+    {
+        return $this->belongsToMany(Characteristics::class,'products_items_characteristics', 'products_items_id', 'products_characteristics_id')
+            ->withPivot(['filter_value']);
+    }
+
     public function reviews()
     {
         return $this->hasMany(Reviews::class, 'products_items_id');
@@ -95,6 +105,11 @@ class Products extends Model
 
     public function collections(){
         return $this->belongsToMany(Collections::class,'products_item_collection','item_id','collection_id');
+    }
+
+    public function brand()
+    {
+        return $this->hasOne(Brands::class, 'id', 'brand_id');
     }
 
     public function getTitleAttribute()

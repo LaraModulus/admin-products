@@ -54,4 +54,38 @@ Route::group([
         Route::get('/datatable', ['as' => 'admin.products.collections.datatable', 'uses' => 'CollectionsController@dataTable']);
     });
 
+    Route::group([
+        'prefix' => 'brands',
+    ], function(){
+        Route::get('/', ['as' => 'admin.products.brands', 'uses' => 'BrandsController@index']);
+        Route::get('/form', ['as' => 'admin.products.brands.form', 'uses' => 'BrandsController@getForm']);
+        Route::post('/form', ['as' => 'admin.products.brands.form', 'uses' => 'BrandsController@postForm']);
+
+        Route::get('/delete', ['as' => 'admin.products.brands.delete', 'uses' => 'BrandsController@delete']);
+        Route::get('/datatable', ['as' => 'admin.products.brands.datatable', 'uses' => 'BrandsController@dataTable']);
+        Route::get('/autocomplete', ['as' => 'admin.products.brands.autocomplete', 'uses' => 'BrandsController@getAutocomplete']);
+    });
+
+    Route::group([
+            'prefix' => 'options',
+        ], function(){
+            Route::get('/', ['as' => 'admin.products.options', 'uses' => 'OptionsController@index']);
+            Route::get('/form', ['as' => 'admin.products.options.form', 'uses' => 'OptionsController@getForm']);
+            Route::post('/form', ['as' => 'admin.products.options.form', 'uses' => 'OptionsController@postForm']);
+
+            Route::get('/delete', ['as' => 'admin.products.options.delete', 'uses' => 'OptionsController@delete']);
+            Route::get('/datatable', ['as' => 'admin.products.options.datatable', 'uses' => 'OptionsController@dataTable']);
+        });
+
+    Route::group([
+            'prefix' => 'characteristics',
+        ], function(){
+            Route::get('/', ['as' => 'admin.products.characteristics', 'uses' => 'CharacteristicsController@index']);
+            Route::get('/form', ['as' => 'admin.products.characteristics.form', 'uses' => 'CharacteristicsController@getForm']);
+            Route::post('/form', ['as' => 'admin.products.characteristics.form', 'uses' => 'CharacteristicsController@postForm']);
+
+            Route::get('/delete', ['as' => 'admin.products.characteristics.delete', 'uses' => 'CharacteristicsController@delete']);
+            Route::get('/datatable', ['as' => 'admin.products.characteristics.datatable', 'uses' => 'CharacteristicsController@dataTable']);
+        });
+
 });
