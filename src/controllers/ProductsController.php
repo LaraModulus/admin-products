@@ -4,6 +4,7 @@ namespace LaraMod\Admin\Products\Controllers;
 
 use App\Http\Controllers\Controller;
 use LaraMod\Admin\Products\Models\Brands;
+use LaraMod\Admin\Products\Models\Characteristics;
 use LaraMod\Admin\Products\Models\Options;
 use LaraMod\Admin\Products\Models\Products;
 use Illuminate\Http\Request;
@@ -38,7 +39,7 @@ class ProductsController extends Controller
 
     public function getForm(Request $request)
     {
-        $this->data['item'] = ($request->has('id') ? Products::with(['files', 'options'])->find($request->get('id')) : new Products());
+        $this->data['item'] = ($request->has('id') ? Products::with(['files', 'options', 'characteristics'])->find($request->get('id')) : new Products());
         if ($request->wantsJson()) {
             return response()->json($this->data);
         }
@@ -83,6 +84,29 @@ class ProductsController extends Controller
                 }
             }
             $item->options()->sync($product_options);
+
+            $product_characteristics = [];
+            $characteristics = collect(json_decode($request->get('characteristics')));
+            if($characteristics){
+                foreach($characteristics as $char){
+                    $c = Characteristics::firstOrCreate(['title_en' => $char->title_en]);
+                    try{
+                        $product_characteristics[$c->id] = [
+                            'filter_value' => $char->pivot->filter_value
+                        ];
+                    }catch (\Exception $e){
+                        /*
+                         * Set empty value if filter_value is undefined
+                         * TODO: find better way to skipp it
+                         */
+                        $product_characteristics[$c->id] = [
+                            'filter_value' => ''
+                        ];
+                    }
+                }
+            }
+            $item->characteristics()->sync($product_characteristics);
+
             $files = [];
             if ($request->get('files') && Schema::hasTable('files_relations')) {
                 $files_data = json_decode($request->get('files'));

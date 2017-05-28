@@ -15,6 +15,7 @@ class CreateProductsLinkedItemsTable extends Migration
         Schema::create('products_linked_items', function (Blueprint $table) {
             $table->integer('item1_id')->unsigned()->index();
             $table->integer('item2_id')->unsigned()->index();
+            $table->primary(['item1_id', 'item2_id'], 'items_primary');
         });
     }
 
@@ -25,6 +26,6 @@ class CreateProductsLinkedItemsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('products_linked_items');
+        Schema::dropIfExists('products_linked_items');
     }
 }

@@ -92,6 +92,12 @@ class Products extends Model
         return $this->morphToMany(Files::class, 'relation', 'files_relations', 'relation_id', 'files_id');
     }
 
+    public function characteristics()
+    {
+        return $this->belongsToMany(Characteristics::class,'products_items_characteristics', 'products_items_id', 'products_characteristics_id')
+            ->withPivot(['filter_value']);
+    }
+
     public function reviews()
     {
         return $this->hasMany(Reviews::class, 'products_items_id');

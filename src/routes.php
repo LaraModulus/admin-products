@@ -77,4 +77,15 @@ Route::group([
             Route::get('/datatable', ['as' => 'admin.products.options.datatable', 'uses' => 'OptionsController@dataTable']);
         });
 
+    Route::group([
+            'prefix' => 'characteristics',
+        ], function(){
+            Route::get('/', ['as' => 'admin.products.characteristics', 'uses' => 'CharacteristicsController@index']);
+            Route::get('/form', ['as' => 'admin.products.characteristics.form', 'uses' => 'CharacteristicsController@getForm']);
+            Route::post('/form', ['as' => 'admin.products.characteristics.form', 'uses' => 'CharacteristicsController@postForm']);
+
+            Route::get('/delete', ['as' => 'admin.products.characteristics.delete', 'uses' => 'CharacteristicsController@delete']);
+            Route::get('/datatable', ['as' => 'admin.products.characteristics.datatable', 'uses' => 'CharacteristicsController@dataTable']);
+        });
+
 });

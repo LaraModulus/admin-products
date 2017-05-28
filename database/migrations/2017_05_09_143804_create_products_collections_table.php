@@ -30,8 +30,9 @@ class CreateProductsCollectionsTable extends Migration
         });
 
         Schema::create('products_item_collection', function(Blueprint $table){
-            $table->integer('collection_id');
-            $table->integer('item_id');
+            $table->integer('collection_id')->index();
+            $table->integer('item_id')->index();
+            $table->primary(['collection_id', 'item_id'], 'collections_primary');
         });
     }
 
@@ -42,7 +43,7 @@ class CreateProductsCollectionsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('products_collections');
-        Schema::drop('products_item_collection');
+        Schema::dropIfExists('products_collections');
+        Schema::dropIfExists('products_item_collection');
     }
 }

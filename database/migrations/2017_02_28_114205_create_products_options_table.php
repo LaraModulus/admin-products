@@ -32,6 +32,8 @@ class CreateProductsOptionsTable extends Migration
             $table->smallInteger('pos')->default(0)->index();
             $table->integer('products_item_id')->index();
             $table->integer('products_option_id')->index();
+
+            $table->primary(['products_item_id', 'products_option_id'], 'options_primary');
         });
     }
 
@@ -42,7 +44,7 @@ class CreateProductsOptionsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('products_options');
-        Schema::drop('products_item_options');
+        Schema::dropIfExists('products_options');
+        Schema::dropIfExists('products_item_options');
     }
 }

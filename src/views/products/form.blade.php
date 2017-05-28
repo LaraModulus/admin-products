@@ -173,6 +173,14 @@
                             </table>
                         </div>
                     </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Product characteristics
+                        </div>
+                        <div class="panel-body">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#productCharacteristics">Edit characteristics</button>
+                        </div>
+                    </div>
                     @if(class_exists(\LaraMod\Admin\Files\AdminFilesServiceProvider::class))
                         <div class="panel panel-default" data-ng-controller="filesContainerController">
                             <div class="panel-body">
@@ -298,9 +306,10 @@
                             </div>
                             <div class="form-group">
                                 <label for="brand">Brand</label>
-                                <input class="form-control" name="brand" id="brand" value="{{$item->brand->title_en}}">
+                                <input class="form-control" name="brand" id="brand" value="{{($item->brand ? $item->brand->title_en : '')}}">
                             </div>
 
+                            <textarea class="hidden" name="characteristics" id="characteristics">@{{ product_characteristics }}</textarea>
                             <textarea class="hidden" name="options" id="options">@{{ product_options }}</textarea>
                             <textarea class="hidden" name="files" id="files_input">@{{ files.item_files }}</textarea>
                             {{ csrf_field() }}
@@ -384,6 +393,48 @@
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
 
+        <div class="modal fade" id="productCharacteristics">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Product Characteristics</h4>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Value</th>
+                                <th><i class="fa fa-cogs"></i></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr data-ng-repeat="item in product_characteristics track by $index">
+                                <td><input data-ng-value="item.title_en" data-ng-model="item.title_en" data-characteristics-autocomplete title="Title" class="form-control"></td>
+                                <td><input data-ng-value="item.pivot.filter_value" data-ng-model="item.pivot.filter_value" title="Value" class="form-control"></td>
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-xs"
+                                            data-ng-click="product_characteristics.splice($index, 1)"><i class="fa fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3">
+                                        <button type="button" class="btn btn-primary" data-ng-click="newCharacteristic()">Add</button>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Done</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
     </div>
     @if(class_exists(\LaraMod\Admin\Files\AdminFilesServiceProvider::class))
         <script>
@@ -394,6 +445,7 @@
                     "pivot": {}
                 };
                 $scope.product_options = [];
+                $scope.product_characteristics = [];
 
                 $scope.$watch($scope.files, function (newVal, oldVal) {
                     Files = $scope.files;
@@ -404,6 +456,7 @@
                         if (response.data.item.files) {
                             $scope.files.item_files = response.data.item.files;
                             $scope.product_options = response.data.item.options;
+                            $scope.product_characteristics = response.data.item.characteristics;
                         }
                     });
                 $scope.removeFile = function (idx) {
@@ -436,6 +489,16 @@
                     $scope.product_options.splice(idx, 1);
                 };
 
+                $scope.newCharacteristic = function(){
+                    $scope.product_characteristics.push({'title_en': '', 'pivot': {}});
+                    setTimeout(function(){
+                        $('[data-characteristics-autocomplete]').autocomplete({
+                            appendTo: '#productCharacteristics',
+                            source: {!! \LaraMod\Admin\Products\Models\Characteristics::all()->pluck('title_en') !!}
+                        });
+                    }, 500);
+                };
+
             });
         </script>
     @endif
@@ -466,6 +529,8 @@
             $('#brand').autocomplete({
                 source: {!! \LaraMod\Admin\Products\Models\Brands::all()->pluck('title_en') !!}
             });
+
+
 
             $("#collections_ids").select2({
                 theme: 'bootstrap',

@@ -34,6 +34,6 @@ class CreateProductsItemsReviewsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('products_items_reviews');
+        Schema::dropIfExists('products_items_reviews');
     }
 }

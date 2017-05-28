@@ -52,6 +52,6 @@ class CreateProductsItemsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('products_items');
+        Schema::dropIfExists('products_items');
     }
 }
