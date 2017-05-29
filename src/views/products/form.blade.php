@@ -149,7 +149,7 @@
                             <table class="table table-striped">
                                 <thead>
                                 <tr>
-                                    <th>Name</th>
+                                    <th colspan="2">Name</th>
                                     <th>Code</th>
                                     <th>Price</th>
                                     <th>Promo price</th>
@@ -157,8 +157,9 @@
                                     <th><i class="fa fa-cogs"></i></th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody ui-sortable="{ 'ui-floating': false }" data-ng-model="product_options">
                                 <tr data-ng-repeat="opt in product_options track by $index">
+                                    <td class="text-center"><i class="fa fa-arrows fa-1x"></i></td>
                                     <td>@{{ opt.title_en }}</td>
                                     <td>@{{ opt.pivot.code }}</td>
                                     <td>@{{ opt.pivot.price }}</td>
@@ -406,13 +407,14 @@
                         <table class="table table-striped">
                             <thead>
                             <tr>
-                                <th>Name</th>
+                                <th colspan="2">Name</th>
                                 <th>Value</th>
                                 <th><i class="fa fa-cogs"></i></th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody ui-sortable="{ 'ui-floating': false }" data-ng-model="product_characteristics">
                             <tr data-ng-repeat="item in product_characteristics track by $index">
+                                <td class="text-center"><i class="fa fa-arrows fa-2x"></i></td>
                                 <td><input data-ng-value="item.title_en" data-ng-model="item.title_en" data-characteristics-autocomplete title="Title" class="form-control"></td>
                                 <td><input data-ng-value="item.pivot.filter_value" data-ng-model="item.pivot.filter_value" title="Value" class="form-control"></td>
                                 <td>

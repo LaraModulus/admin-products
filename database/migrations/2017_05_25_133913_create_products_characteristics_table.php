@@ -21,13 +21,13 @@ class CreateProductsCharacteristicsTable extends Migration
             }
             $table->enum('filter_type', ['range', 'multiple', 'single', 'boolean'])->default('single');
             $table->boolean('filter_enabled')->default(false);
-            $table->smallInteger('pos')->default(0)->index();
         });
 
         Schema::create('products_items_characteristics', function(Blueprint $table){
            $table->integer('products_characteristics_id')->unsigned();
            $table->integer('products_items_id')->unsigned();
            $table->string('filter_value')->nullable();
+           $table->smallInteger('pos')->default(0)->index();
 
            $table->primary(['products_characteristics_id', 'products_items_id'], 'characteristics_primary');
         });

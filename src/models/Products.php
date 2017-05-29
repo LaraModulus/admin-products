@@ -79,7 +79,9 @@ class Products extends Model
     public function options()
     {
         return $this->belongsToMany(Options::class, 'products_item_options', 'products_item_id',
-            'products_option_id')->withPivot(['viewable', 'price', 'promo_price', 'code', 'manufacturer_code', 'weight', 'volume', 'avlb_qty','pos']);
+            'products_option_id')
+            ->withPivot(['viewable', 'price', 'promo_price', 'code', 'manufacturer_code', 'weight', 'volume', 'avlb_qty','pos'])
+            ->orderBy('products_item_options.pos');
     }
 
     public function linked()
@@ -95,7 +97,8 @@ class Products extends Model
     public function characteristics()
     {
         return $this->belongsToMany(Characteristics::class,'products_items_characteristics', 'products_items_id', 'products_characteristics_id')
-            ->withPivot(['filter_value']);
+            ->withPivot(['filter_value', 'pos'])
+            ->orderBy('products_items_characteristics.pos');
     }
 
     public function reviews()

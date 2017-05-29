@@ -70,6 +70,7 @@ class ProductsController extends Controller
             $product_options = [];
             $options = collect(json_decode($request->get('options')));
             if($options){
+                $pos = 0;
                 foreach($options as $opt){
                     $o = Options::firstOrCreate(['title_en' => $opt->title_en]);
                     $product_options[$o->id] = [
@@ -79,8 +80,10 @@ class ProductsController extends Controller
                         'manufacturer_code' => $opt->pivot->manufacturer_code,
                         'weight' => $opt->pivot->weight,
                         'volume' => $opt->pivot->volume,
-                        'avlb_qty' => $opt->pivot->avlb_qty
+                        'avlb_qty' => $opt->pivot->avlb_qty,
+                        'pos' => $pos
                     ];
+                    $pos++;
                 }
             }
             $item->options()->sync($product_options);
@@ -88,21 +91,25 @@ class ProductsController extends Controller
             $product_characteristics = [];
             $characteristics = collect(json_decode($request->get('characteristics')));
             if($characteristics){
+                $pos = 0;
                 foreach($characteristics as $char){
                     $c = Characteristics::firstOrCreate(['title_en' => $char->title_en]);
                     try{
                         $product_characteristics[$c->id] = [
-                            'filter_value' => $char->pivot->filter_value
+                            'filter_value' => $char->pivot->filter_value,
+                            'pos' => $pos
                         ];
                     }catch (\Exception $e){
                         /*
                          * Set empty value if filter_value is undefined
-                         * TODO: find better way to skipp it
+                         * TODO: find better way to skip it
                          */
                         $product_characteristics[$c->id] = [
-                            'filter_value' => ''
+                            'filter_value' => '',
+                            'pos' => $pos
                         ];
                     }
+                    $pos++;
                 }
             }
             $item->characteristics()->sync($product_characteristics);

@@ -52,7 +52,6 @@ class Characteristics extends Model
     protected function bootIfNotBooted()
     {
         parent::boot();
-        static::addGlobalScope(new AdminCoreOrderByPosScope());
         static::addGlobalScope(new AdminCoreOrderByCreatedAtScope());
     }
 
