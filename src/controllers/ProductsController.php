@@ -110,13 +110,15 @@ class ProductsController extends Controller
             $files = [];
             if ($request->get('files') && Schema::hasTable('files_relations')) {
                 $files_data = json_decode($request->get('files'));
-
+                $pos = 0;
                 foreach ($files_data as $f) {
                     $files[$f->id] = [];
                     foreach (config('app.locales', [config('app.fallback_locale', 'en')]) as $locale) {
                         $files[$f->id]['title_' . $locale] = $f->{'title_' . $locale};
                         $files[$f->id]['description_' . $locale] = $f->{'description_' . $locale};
                     }
+                    $files[$f->id]['pos'] = $pos;
+                    $pos++;
                 }
                 $item->files()->sync($files);
             }

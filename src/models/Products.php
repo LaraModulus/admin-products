@@ -89,7 +89,7 @@ class Products extends Model
 
     public function files()
     {
-        return $this->morphToMany(Files::class, 'relation', 'files_relations', 'relation_id', 'files_id');
+        return $this->morphToMany(Files::class, 'relation', 'files_relations', 'relation_id', 'files_id')->orderBy('files_relations.pos');
     }
 
     public function characteristics()

@@ -185,7 +185,8 @@
                         <div class="panel panel-default" data-ng-controller="filesContainerController">
                             <div class="panel-body">
                                 <div data-ng-class="{hidden: !files.item_files.length}">
-                                    <ul class="list-inline files-list" data-ng-if="files.item_files.length">
+
+                                    <ul class="list-inline files-list" data-ng-if="files.item_files.length" ui-sortable="{ 'ui-floating': true }" data-ng-model="files.item_files">
                                         <li class="item" data-ng-repeat="file in files.item_files track by $index">
 
                                             <div class="text-center image-block">
@@ -206,6 +207,7 @@
                                         </li>
 
                                     </ul>
+                                    <small class="help-block"><i class="fa fa-question-circle text-success"></i> Drag to arrange. First image is main image.</small>
                                     <hr>
                                 </div>
                                 <button class="btn btn-primary btn-md" data-target="#filesModal" data-toggle="modal"
@@ -434,7 +436,6 @@
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
-
     </div>
     @if(class_exists(\LaraMod\Admin\Files\AdminFilesServiceProvider::class))
         <script>

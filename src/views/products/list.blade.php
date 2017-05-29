@@ -1,6 +1,6 @@
 @extends('admincore::layouts.dashboard')
 @section('content')
-    <div id="page-wrapper">
+    <div id="page-wrapper" data-ng-app="App">
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header">Products</h1>
@@ -40,8 +40,10 @@
 @stop
 @section('js')
     <script type="text/javascript">
+
         $(function () {
             $('#items_table').DataTable({
+                deferRender: true,
                 processing: true,
                 serverSide: true,
                 ajax: '{!! route('admin.products.items.datatable') !!}',
