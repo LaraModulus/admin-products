@@ -103,5 +103,12 @@ class ReviewsController extends Controller
             ->make('true');
     }
 
+    public function reviewsWidget(){
+        config()->set('admincore.menu.products.active', false);
+        return view('adminproducts::reviews.widget', [
+            'reviews_count' => Reviews::where('created_at', '>', new \Carbon\Carbon('yesterday'))->count()
+        ])->render();
+    }
+
 
 }
