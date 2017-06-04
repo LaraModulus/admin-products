@@ -6,13 +6,14 @@ use LaraMod\Admin\Core\Scopes\AdminCoreOrderByCreatedAtScope;
 use LaraMod\Admin\Core\Scopes\AdminCoreOrderByPosScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use LaraMod\Admin\Core\Traits\HelpersTrait;
 
 class Reviews extends Model
 {
     public $timestamps = true;
     protected $table = 'products_items_reviews';
 
-    use SoftDeletes;
+    use SoftDeletes, HelpersTrait;
     protected $guarded = ['id'];
 
 

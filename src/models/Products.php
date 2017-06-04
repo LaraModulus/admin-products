@@ -4,6 +4,7 @@ namespace LaraMod\Admin\Products\Models;
 
 use LaraMod\Admin\Core\Scopes\AdminCoreOrderByCreatedAtScope;
 use LaraMod\Admin\Core\Scopes\AdminCoreOrderByPosScope;
+use LaraMod\Admin\Core\Traits\HelpersTrait;
 use LaraMod\Admin\Files\Models\Files;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -13,7 +14,7 @@ class Products extends Model
     public $timestamps = true;
     protected $table = 'products_items';
 
-    use SoftDeletes;
+    use SoftDeletes, HelpersTrait;
     protected $guarded = ['id'];
 
     protected $casts = [
@@ -45,7 +46,8 @@ class Products extends Model
         'volume',
         'avlb_qty',
         'subtract_qty',
-        'brand_id'
+        'brand_id',
+        'slug',
     ];
 
     public function __construct(array $attributes = [])

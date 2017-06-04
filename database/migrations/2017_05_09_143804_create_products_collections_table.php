@@ -27,6 +27,7 @@ class CreateProductsCollectionsTable extends Migration
             }
             $table->boolean('viewable')->default(false)->index();
             $table->smallInteger('pos')->default(0)->index();
+            $table->string('slug');
         });
 
         Schema::create('products_item_collection', function(Blueprint $table){

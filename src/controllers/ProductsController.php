@@ -61,9 +61,12 @@ class ProductsController extends Controller
                 }
                 $request->merge(['brand_id' => $brand->id]);
             }
-            $item->update(array_filter($request->only($item->getFillable()), function($key) use ($request, $item){
-                return in_array($key, array_keys($request->all())) || @$item->getCasts()[$key]=='boolean';
-            }, ARRAY_FILTER_USE_KEY));
+            if(!$request->has('slug')){
+                $request->merge(['slug' => $item->createSlug(
+                    $request->get('title_'.config('app.fallback_locale', 'en'))
+                )]);
+            }
+            $item->autoFill($request);
 
             $item->categories()->sync($request->get('item_categories', []));
             $item->collections()->sync($request->get('collections', []));

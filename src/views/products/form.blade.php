@@ -182,6 +182,18 @@
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#productCharacteristics">Edit characteristics</button>
                         </div>
                     </div>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="slug">Slug</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">{{url('/shop/first-catagory-slug-cid')}}/</div>
+                                    <input pattern="[A-z0-9\-]+" type="text" name="slug" id="slug" class="form-control" value="{{old('slug', $item->slug)}}" placeholder="Example: hello-world-123. Set automatically if empty.">
+                                    <div class="input-group-addon">-{{($item->id ? $item->id : $item->max('id') + 1)}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     @if(class_exists(\LaraMod\Admin\Files\AdminFilesServiceProvider::class))
                         <div class="panel panel-default" data-ng-controller="filesContainerController">
                             <div class="panel-body">
