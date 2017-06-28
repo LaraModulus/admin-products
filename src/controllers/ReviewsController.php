@@ -36,9 +36,7 @@ class ReviewsController extends Controller
 
         $item = Reviews::firstOrCreate(['id' => $request->get('id')]);
         try {
-            $item->update(array_filter($request->only($item->getFillable()), function($key) use ($request, $item){
-                return in_array($key, array_keys($request->all())) || @$item->getCasts()[$key]=='boolean';
-            }, ARRAY_FILTER_USE_KEY));
+            $item->autoFill($request);
         } catch (\Exception $e) {
             return redirect()->back()->withInput()->withErrors(['errors' => $e->getMessage()]);
         }
@@ -101,6 +99,13 @@ class ReviewsController extends Controller
             })
             ->orderColumn('created_at $1', 'products_items_id $1')
             ->make('true');
+    }
+
+    public function reviewsWidget(){
+        config()->set('admincore.menu.products.active', false);
+        return view('adminproducts::reviews.widget', [
+            'reviews_count' => Reviews::where('created_at', '>', new \Carbon\Carbon('yesterday'))->count()
+        ])->render();
     }
 
 

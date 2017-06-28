@@ -3,9 +3,12 @@
 namespace LaraMod\Admin\Products;
 
 use Illuminate\Support\ServiceProvider;
+use LaraMod\Admin\Core\Traits\DashboardTrait;
+use LaraMod\Admin\Products\Controllers\ReviewsController;
 
 class AdminProductsServiceProvider extends ServiceProvider
 {
+    use DashboardTrait;
     /**
      * Bootstrap the application services.
      *
@@ -21,6 +24,14 @@ class AdminProductsServiceProvider extends ServiceProvider
             __DIR__ . '/../database/migrations/' => database_path('migrations'),
         ], 'migrations');
 
+        /**
+         * Add reviews widget to controller
+         */
+        try{
+            $this->addWidget($this->app->make(ReviewsController::class)->reviewsWidget());
+        }catch (\Exception $e){
+            $this->addWidget($e->getMessage());
+        }
     }
 
     /**

@@ -27,6 +27,7 @@ class CreateProductsCategoriesTable extends Migration
             $table->integer('categories_id')->default(0)->index();
             $table->boolean('viewable')->default(0)->index();
             $table->smallInteger('pos')->default(0)->index();
+            $table->string('slug');
         });
     }
 

@@ -4,6 +4,7 @@ namespace LaraMod\Admin\Products\Models;
 
 use LaraMod\Admin\Core\Scopes\AdminCoreOrderByCreatedAtScope;
 use LaraMod\Admin\Core\Scopes\AdminCoreOrderByPosScope;
+use LaraMod\Admin\Core\Traits\HelpersTrait;
 use LaraMod\Admin\Files\Models\Files;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -13,7 +14,7 @@ class Products extends Model
     public $timestamps = true;
     protected $table = 'products_items';
 
-    use SoftDeletes;
+    use SoftDeletes, HelpersTrait;
     protected $guarded = ['id'];
 
     protected $casts = [
@@ -45,7 +46,8 @@ class Products extends Model
         'volume',
         'avlb_qty',
         'subtract_qty',
-        'brand_id'
+        'brand_id',
+        'slug',
     ];
 
     public function __construct(array $attributes = [])
@@ -79,7 +81,9 @@ class Products extends Model
     public function options()
     {
         return $this->belongsToMany(Options::class, 'products_item_options', 'products_item_id',
-            'products_option_id')->withPivot(['viewable', 'price', 'promo_price', 'code', 'manufacturer_code', 'weight', 'volume', 'avlb_qty','pos']);
+            'products_option_id')
+            ->withPivot(['viewable', 'price', 'promo_price', 'code', 'manufacturer_code', 'weight', 'volume', 'avlb_qty','pos'])
+            ->orderBy('products_item_options.pos');
     }
 
     public function linked()
@@ -89,13 +93,14 @@ class Products extends Model
 
     public function files()
     {
-        return $this->morphToMany(Files::class, 'relation', 'files_relations', 'relation_id', 'files_id');
+        return $this->morphToMany(Files::class, 'relation', 'files_relations', 'relation_id', 'files_id')->orderBy('files_relations.pos');
     }
 
     public function characteristics()
     {
         return $this->belongsToMany(Characteristics::class,'products_items_characteristics', 'products_items_id', 'products_characteristics_id')
-            ->withPivot(['filter_value']);
+            ->withPivot(['filter_value', 'pos'])
+            ->orderBy('products_items_characteristics.pos');
     }
 
     public function reviews()

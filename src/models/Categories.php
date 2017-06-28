@@ -6,13 +6,14 @@ use LaraMod\Admin\Core\Scopes\AdminCoreOrderByCreatedAtScope;
 use LaraMod\Admin\Core\Scopes\AdminCoreOrderByPosScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use LaraMod\Admin\Core\Traits\HelpersTrait;
 
 class Categories extends Model
 {
     public $timestamps = true;
     protected $table = 'products_categories';
 
-    use SoftDeletes;
+    use SoftDeletes, HelpersTrait;
     protected $guarded = ['id'];
 
     protected $casts = [
@@ -25,6 +26,7 @@ class Categories extends Model
         'categories_id',
         'viewable',
         'pos',
+        'slug'
     ];
 
     public function __construct(array $attributes = [])

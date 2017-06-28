@@ -40,6 +40,7 @@ class CreateProductsItemsTable extends Migration
             $table->smallInteger('pos')->default(0)->index();
             $table->boolean('subtract_qty')->default(false);
             $table->integer('brand_id')->unsigned()->nullable()->index();
+            $table->string('slug');
 
 
         });

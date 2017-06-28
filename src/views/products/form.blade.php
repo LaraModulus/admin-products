@@ -149,7 +149,7 @@
                             <table class="table table-striped">
                                 <thead>
                                 <tr>
-                                    <th>Name</th>
+                                    <th colspan="2">Name</th>
                                     <th>Code</th>
                                     <th>Price</th>
                                     <th>Promo price</th>
@@ -157,8 +157,9 @@
                                     <th><i class="fa fa-cogs"></i></th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody ui-sortable="{ 'ui-floating': false }" data-ng-model="product_options">
                                 <tr data-ng-repeat="opt in product_options track by $index">
+                                    <td class="text-center"><i class="fa fa-arrows fa-1x"></i></td>
                                     <td>@{{ opt.title_en }}</td>
                                     <td>@{{ opt.pivot.code }}</td>
                                     <td>@{{ opt.pivot.price }}</td>
@@ -181,11 +182,24 @@
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#productCharacteristics">Edit characteristics</button>
                         </div>
                     </div>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="slug">Slug</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">{{url('/shop/first-catagory-slug-cid')}}/</div>
+                                    <input pattern="[A-z0-9\-]+" type="text" name="slug" id="slug" class="form-control" value="{{old('slug', $item->slug)}}" placeholder="Example: hello-world-123. Set automatically if empty.">
+                                    <div class="input-group-addon">-{{($item->id ? $item->id : $item->max('id') + 1)}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     @if(class_exists(\LaraMod\Admin\Files\AdminFilesServiceProvider::class))
                         <div class="panel panel-default" data-ng-controller="filesContainerController">
                             <div class="panel-body">
                                 <div data-ng-class="{hidden: !files.item_files.length}">
-                                    <ul class="list-inline files-list" data-ng-if="files.item_files.length">
+
+                                    <ul class="list-inline files-list" data-ng-if="files.item_files.length" ui-sortable="{ 'ui-floating': true }" data-ng-model="files.item_files">
                                         <li class="item" data-ng-repeat="file in files.item_files track by $index">
 
                                             <div class="text-center image-block">
@@ -206,6 +220,7 @@
                                         </li>
 
                                     </ul>
+                                    <small class="help-block"><i class="fa fa-question-circle text-success"></i> Drag to arrange. First image is main image.</small>
                                     <hr>
                                 </div>
                                 <button class="btn btn-primary btn-md" data-target="#filesModal" data-toggle="modal"
@@ -404,13 +419,14 @@
                         <table class="table table-striped">
                             <thead>
                             <tr>
-                                <th>Name</th>
+                                <th colspan="2">Name</th>
                                 <th>Value</th>
                                 <th><i class="fa fa-cogs"></i></th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody ui-sortable="{ 'ui-floating': false }" data-ng-model="product_characteristics">
                             <tr data-ng-repeat="item in product_characteristics track by $index">
+                                <td class="text-center"><i class="fa fa-arrows fa-2x"></i></td>
                                 <td><input data-ng-value="item.title_en" data-ng-model="item.title_en" data-characteristics-autocomplete title="Title" class="form-control"></td>
                                 <td><input data-ng-value="item.pivot.filter_value" data-ng-model="item.pivot.filter_value" title="Value" class="form-control"></td>
                                 <td>
@@ -434,7 +450,6 @@
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
-
     </div>
     @if(class_exists(\LaraMod\Admin\Files\AdminFilesServiceProvider::class))
         <script>

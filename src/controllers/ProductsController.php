@@ -61,15 +61,19 @@ class ProductsController extends Controller
                 }
                 $request->merge(['brand_id' => $brand->id]);
             }
-            $item->update(array_filter($request->only($item->getFillable()), function($key) use ($request, $item){
-                return in_array($key, array_keys($request->all())) || @$item->getCasts()[$key]=='boolean';
-            }, ARRAY_FILTER_USE_KEY));
+            if(!$request->has('slug')){
+                $request->merge(['slug' => $item->createSlug(
+                    $request->get('title_'.config('app.fallback_locale', 'en'))
+                )]);
+            }
+            $item->autoFill($request);
 
             $item->categories()->sync($request->get('item_categories', []));
             $item->collections()->sync($request->get('collections', []));
             $product_options = [];
             $options = collect(json_decode($request->get('options')));
             if($options){
+                $pos = 0;
                 foreach($options as $opt){
                     $o = Options::firstOrCreate(['title_en' => $opt->title_en]);
                     $product_options[$o->id] = [
@@ -79,8 +83,10 @@ class ProductsController extends Controller
                         'manufacturer_code' => $opt->pivot->manufacturer_code,
                         'weight' => $opt->pivot->weight,
                         'volume' => $opt->pivot->volume,
-                        'avlb_qty' => $opt->pivot->avlb_qty
+                        'avlb_qty' => $opt->pivot->avlb_qty,
+                        'pos' => $pos
                     ];
+                    $pos++;
                 }
             }
             $item->options()->sync($product_options);
@@ -88,21 +94,25 @@ class ProductsController extends Controller
             $product_characteristics = [];
             $characteristics = collect(json_decode($request->get('characteristics')));
             if($characteristics){
+                $pos = 0;
                 foreach($characteristics as $char){
                     $c = Characteristics::firstOrCreate(['title_en' => $char->title_en]);
                     try{
                         $product_characteristics[$c->id] = [
-                            'filter_value' => $char->pivot->filter_value
+                            'filter_value' => $char->pivot->filter_value,
+                            'pos' => $pos
                         ];
                     }catch (\Exception $e){
                         /*
                          * Set empty value if filter_value is undefined
-                         * TODO: find better way to skipp it
+                         * TODO: find better way to skip it
                          */
                         $product_characteristics[$c->id] = [
-                            'filter_value' => ''
+                            'filter_value' => '',
+                            'pos' => $pos
                         ];
                     }
+                    $pos++;
                 }
             }
             $item->characteristics()->sync($product_characteristics);
@@ -110,13 +120,15 @@ class ProductsController extends Controller
             $files = [];
             if ($request->get('files') && Schema::hasTable('files_relations')) {
                 $files_data = json_decode($request->get('files'));
-
+                $pos = 0;
                 foreach ($files_data as $f) {
                     $files[$f->id] = [];
                     foreach (config('app.locales', [config('app.fallback_locale', 'en')]) as $locale) {
                         $files[$f->id]['title_' . $locale] = $f->{'title_' . $locale};
                         $files[$f->id]['description_' . $locale] = $f->{'description_' . $locale};
                     }
+                    $files[$f->id]['pos'] = $pos;
+                    $pos++;
                 }
                 $item->files()->sync($files);
             }

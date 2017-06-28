@@ -25,6 +25,7 @@ class CreateProductsBrandsTable extends Migration
             }
             $table->boolean('viewable')->default(true)->index();
             $table->smallInteger('pos')->default(0)->index();
+            $table->string('slug');
         });
     }
 

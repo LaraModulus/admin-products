@@ -5,12 +5,14 @@ namespace LaraMod\Admin\Products\Models;
 use LaraMod\Admin\Core\Scopes\AdminCoreOrderByCreatedAtScope;
 use LaraMod\Admin\Core\Scopes\AdminCoreOrderByPosScope;
 use Illuminate\Database\Eloquent\Model;
+use LaraMod\Admin\Core\Traits\HelpersTrait;
 
 class Characteristics extends Model
 {
     public $timestamps = true;
     protected $table = 'products_characteristics';
 
+    use HelpersTrait;
     protected $guarded = ['id'];
 
     protected $casts = [
@@ -52,7 +54,6 @@ class Characteristics extends Model
     protected function bootIfNotBooted()
     {
         parent::boot();
-        static::addGlobalScope(new AdminCoreOrderByPosScope());
         static::addGlobalScope(new AdminCoreOrderByCreatedAtScope());
     }
 
