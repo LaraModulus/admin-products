@@ -42,7 +42,7 @@ class CollectionsController extends Controller
     public function postForm(Request $request)
     {
 
-        $item = Collections::firstOrCreate(['id' => $request->get('id')]);
+        $item = Collections::firstOrNew(['id' => $request->get('id')]);
         try {
             if(!$request->has('slug')){
                 $request->merge(['slug' => $item->createSlug(

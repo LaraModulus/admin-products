@@ -43,7 +43,7 @@ class BrandsController extends Controller
     public function postForm(Request $request)
     {
 
-        $item = Brands::firstOrCreate(['id' => $request->get('id')]);
+        $item = Brands::firstOrNew(['id' => $request->get('id')]);
         try {
             if(!$request->has('slug')){
                 $request->merge(['slug' => $item->createSlug(

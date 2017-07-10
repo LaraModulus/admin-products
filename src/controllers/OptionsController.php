@@ -34,7 +34,7 @@ class OptionsController extends Controller
     public function postForm(Request $request)
     {
 
-        $item = Options::firstOrCreate(['id' => $request->get('id')]);
+        $item = Options::firstOrNew(['id' => $request->get('id')]);
         try {
             $item->autoFill($request);
         } catch (\Exception $e) {
