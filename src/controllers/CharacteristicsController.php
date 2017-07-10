@@ -42,7 +42,7 @@ class CharacteristicsController extends Controller
     public function postForm(Request $request)
     {
 
-        $item = Characteristics::firstOrCreate(['id' => $request->get('id')]);
+        $item = Characteristics::firstOrNew(['id' => $request->get('id')]);
         try {
             $item->autoFill($request);
         } catch (\Exception $e) {

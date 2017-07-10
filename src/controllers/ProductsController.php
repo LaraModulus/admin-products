@@ -50,7 +50,7 @@ class ProductsController extends Controller
     public function postForm(Request $request)
     {
 
-        $item = Products::firstOrCreate(['id' => $request->get('id')]);
+        $item = Products::firstOrNew(['id' => $request->get('id')]);
         try {
             if($request->has('brand')){
                 $brand = Brands::where('title_'.config('app.fallback_locale', 'en'),'LIKE',$request->get('brand'))->first();

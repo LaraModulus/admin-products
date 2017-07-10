@@ -34,7 +34,7 @@ class ReviewsController extends Controller
     public function postForm(Request $request)
     {
 
-        $item = Reviews::firstOrCreate(['id' => $request->get('id')]);
+        $item = Reviews::firstOrNew(['id' => $request->get('id')]);
         try {
             $item->autoFill($request);
         } catch (\Exception $e) {
