@@ -22,7 +22,7 @@ class BrandsController extends Controller
     {
         $items = new Brands();
         if($request->has('q')){
-            $items->where('title_en', 'like', '%'.$request->get('q').'%');
+            $items->where('title_'.config('app.fallback_locale', 'en'), 'like', '%'.$request->get('q').'%');
         }
         $this->data['items'] = $items->paginate(20);
 
@@ -86,7 +86,7 @@ class BrandsController extends Controller
 
     public function dataTable()
     {
-        $items = Brands::select(['id','title_en','created_at','viewable']);
+        $items = Brands::select(['id','title_'.config('app.fallback_locale', 'en'),'created_at','viewable']);
 
         return DataTables::of($items)
             ->addColumn('action', function ($item) {
@@ -112,10 +112,10 @@ class BrandsController extends Controller
         }
         $brands = new Brands();
         if($request->has('term')){
-            $brands = $brands->where('title_en','like','%'.$request->get('term').'%');
+            $brands = $brands->where('title_'.config('app.fallback_locale', 'en'),'like','%'.$request->get('term').'%');
         }
         if($request->has('tagsinput')){
-            $brands = $brands->select(\DB::raw('title_en as value'));
+            $brands = $brands->select(\DB::raw('title_'.config('app.fallback_locale', 'en').' as value'));
         }
         return $brands->limit(5)->get();
     }

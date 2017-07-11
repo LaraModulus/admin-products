@@ -21,7 +21,7 @@ class CollectionsController extends Controller
     {
         $items = new Collections();
         if($request->has('q')){
-            $items->where('title_en', 'like', '%'.$request->get('q').'%');
+            $items->where('title_'.config('app.fallback_locale', 'en'), 'like', '%'.$request->get('q').'%');
         }
         $this->data['items'] = $items->paginate(20);
 
@@ -86,7 +86,7 @@ class CollectionsController extends Controller
 
     public function dataTable()
     {
-        $items = Collections::select(['id','title_en','created_at', 'viewable']);
+        $items = Collections::select(['id','title_'.config('app.fallback_locale', 'en'),'created_at', 'viewable']);
 
         return DataTables::of($items)
             ->addColumn('action', function ($item) {

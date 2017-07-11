@@ -130,7 +130,7 @@
                                         {{--<input type="hidden" id="products_ids" name="products">--}}
                                         <select multiple class="form-control" name="collections[]" id="collections_ids">
                                             @foreach($item->collections as $c)
-                                                <option value="{{$c->id}}">{{$c->title_en}}</option>
+                                                <option value="{{$c->id}}">{{$c->{'title_'.config('app.fallback_locale', 'en')} }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -160,7 +160,7 @@
                                 <tbody ui-sortable="{ 'ui-floating': false }" data-ng-model="product_options">
                                 <tr data-ng-repeat="opt in product_options track by $index">
                                     <td class="text-center"><i class="fa fa-arrows fa-1x"></i></td>
-                                    <td>@{{ opt.title_en }}</td>
+                                    <td>@{{ opt.title_<?=config('app.fallback_locale', 'en')?> }}</td>
                                     <td>@{{ opt.pivot.code }}</td>
                                     <td>@{{ opt.pivot.price }}</td>
                                     <td>@{{ opt.pivot.promo_price }}</td>
@@ -321,7 +321,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="brand">Brand</label>
-                                <input class="form-control" name="brand" id="brand" value="{{($item->brand ? $item->brand->title_en : '')}}">
+                                <input class="form-control" name="brand" id="brand" value="{{($item->brand ? $item->brand->{'title_'.config('app.fallback_locale', 'en')} : '')}}">
                             </div>
 
                             <textarea class="hidden" name="characteristics" id="characteristics">@{{ product_characteristics }}</textarea>
@@ -347,7 +347,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Option title</label>
-                                    <input type="text" class="form-control" data-ng-model="option.title_en" name="option_title" id="option_title" title="Option title" placeholder="Option name">
+                                    <input type="text" class="form-control" data-ng-model="option.title_{{config('app.fallback_locale', 'en')}}" name="option_title" id="option_title" title="Option title" placeholder="Option name">
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -427,7 +427,7 @@
                             <tbody ui-sortable="{ 'ui-floating': false }" data-ng-model="product_characteristics">
                             <tr data-ng-repeat="item in product_characteristics track by $index">
                                 <td class="text-center"><i class="fa fa-arrows fa-2x"></i></td>
-                                <td><input data-ng-value="item.title_en" data-ng-model="item.title_en" data-characteristics-autocomplete title="Title" class="form-control"></td>
+                                <td><input data-ng-value="item.title_{{config('app.fallback_locale', 'en')}}" data-ng-model="item.title_{{config('app.fallback_locale', 'en')}}" data-characteristics-autocomplete title="Title" class="form-control"></td>
                                 <td><input data-ng-value="item.pivot.filter_value" data-ng-model="item.pivot.filter_value" title="Value" class="form-control"></td>
                                 <td>
                                     <button type="button" class="btn btn-danger btn-xs"
@@ -485,7 +485,7 @@
                 $scope.saveOption = function(){
                     var done = false;
                     for(i=0;i<$scope.product_options.length; i++){
-                        if($scope.option.title_en == $scope.product_options[i].title_en){
+                        if($scope.option.title_{{config('app.fallback_locale', 'en')}} == $scope.product_options[i].title_{{config('app.fallback_locale', 'en')}}){
                             done = true;
                             break;
                         }
@@ -505,11 +505,11 @@
                 };
 
                 $scope.newCharacteristic = function(){
-                    $scope.product_characteristics.push({'title_en': '', 'pivot': {}});
+                    $scope.product_characteristics.push({'title_{{config('app.fallback_locale', 'en')}}': '', 'pivot': {}});
                     setTimeout(function(){
                         $('[data-characteristics-autocomplete]').autocomplete({
                             appendTo: '#productCharacteristics',
-                            source: {!! \LaraMod\Admin\Products\Models\Characteristics::all()->pluck('title_en') !!}
+                            source: {!! \LaraMod\Admin\Products\Models\Characteristics::all()->pluck('title_'.config('app.fallback_locale', 'en')) !!}
                         });
                     }, 500);
                 };
@@ -525,7 +525,7 @@
             if (item.loading) return item.text;
 
             var markup = '<ul class="list-unstyled">' +
-                '<li>['+item.id+'] ' + item.title_en + '</li>';
+                '<li>['+item.id+'] ' + item.title_{{config('app.fallback_locale', 'en')}} + '</li>';
 
             markup += '</ul>';
 
@@ -533,16 +533,16 @@
         }
 
         function formatItemsSelection (item) {
-            return item.title_en;
+            return item.title_{{config('app.fallback_locale', 'en')}};
         }
 
         $(document).ready(function(){
             $('#option_title').autocomplete({
                 appendTo: '#optionModal',
-                source: {!! \LaraMod\Admin\Products\Models\Options::all()->pluck('title_en') !!}
+                source: {!! \LaraMod\Admin\Products\Models\Options::all()->pluck('title_'.config('app.fallback_locale', 'en')) !!}
             });
             $('#brand').autocomplete({
-                source: {!! \LaraMod\Admin\Products\Models\Brands::all()->pluck('title_en') !!}
+                source: {!! \LaraMod\Admin\Products\Models\Brands::all()->pluck('title_'.config('app.fallback_locale', 'en')) !!}
             });
 
 
@@ -550,10 +550,10 @@
             $("#collections_ids").select2({
                 theme: 'bootstrap',
                 multiple: true,
-                data: {!! $item->collections()->select(['id','title_en'])->get()->map(function($item){
+                data: {!! $item->collections()->select(['id','title_'.config('app.fallback_locale', 'en')])->get()->map(function($item){
                         return [
                             "id" => $item->id,
-                            "title_en" => $item->title_en
+                            "title_".config('app.fallback_locale', 'en') => $item->{'title_'.config('app.fallback_locale', 'en')}
                         ];
                     }) !!},
                 ajax: {

@@ -77,7 +77,7 @@ class CategoriesController extends Controller
 
     public function dataTable()
     {
-        $items = Categories::select(['id', 'title_en', 'viewable', 'created_at']);
+        $items = Categories::select(['id', 'title_'.config('app.fallback_locale', 'en'), 'viewable', 'created_at']);
 
         return DataTables::of($items)
             ->addColumn('action', function ($item) {

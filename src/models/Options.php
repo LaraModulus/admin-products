@@ -33,12 +33,12 @@ class Options extends Model
 
     public function getTitleAttribute()
     {
-        return $this->{'title_' . config('app.fallback_locale', 'en')};
+        return $this->{'title_' . config('app.locale', 'en')};
     }
 
     public function getDescriptionAttribute()
     {
-        return $this->{'description_' . config('app.fallback_locale', 'en')};
+        return $this->{'description_' . config('app.locale', 'en')};
     }
 
     protected function bootIfNotBooted()
