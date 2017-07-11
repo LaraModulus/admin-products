@@ -26,7 +26,7 @@ class ProductsController extends Controller
     {
         $items = Products::with(['files']);
         if($request->has('q')){
-            $items->where('title_en', 'like', '%'.$request->get('q').'%');
+            $items->where('title_'.config('app.fallback_locale', 'en'), 'like', '%'.$request->get('q').'%');
         }
         $this->data['items'] = $items->paginate(20);
 
@@ -75,7 +75,7 @@ class ProductsController extends Controller
             if($options){
                 $pos = 0;
                 foreach($options as $opt){
-                    $o = Options::firstOrCreate(['title_en' => $opt->title_en]);
+                    $o = Options::firstOrCreate(['title_'.config('app.fallback_locale', 'en') => $opt->{'title_'.config('app.fallback_locale', 'en')}]);
                     $product_options[$o->id] = [
                         'price' => $opt->pivot->price,
                         'promo_price' => $opt->pivot->promo_price,
@@ -96,7 +96,7 @@ class ProductsController extends Controller
             if($characteristics){
                 $pos = 0;
                 foreach($characteristics as $char){
-                    $c = Characteristics::firstOrCreate(['title_en' => $char->title_en]);
+                    $c = Characteristics::firstOrCreate(['title_'.config('app.fallback_locale', 'en') => $char->{'title_'.config('app.fallback_locale', 'en')}]);
                     try{
                         $product_characteristics[$c->id] = [
                             'filter_value' => $char->pivot->filter_value,
@@ -167,7 +167,7 @@ class ProductsController extends Controller
 
     public function dataTable()
     {
-        $items = Products::select(['id', 'title_en', 'code', 'created_at', 'viewable']);
+        $items = Products::select(['id', 'title_'.config('app.fallback_locale', 'en'), 'code', 'created_at', 'viewable']);
 
         return DataTables::of($items)
             ->addColumn('action', function ($item) {

@@ -72,7 +72,7 @@ class OptionsController extends Controller
 
     public function dataTable()
     {
-        $items = Options::select(['id','created_at','title_en']);
+        $items = Options::select(['id','created_at','title_'.config('app.fallback_locale', 'en')]);
 
         return DataTables::of($items)
             ->addColumn('action', function ($item) {

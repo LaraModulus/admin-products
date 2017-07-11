@@ -21,7 +21,7 @@ class CharacteristicsController extends Controller
     {
         $items = new Characteristics();
         if($request->has('q')){
-            $items->where('title_en', 'like', '%'.$request->get('q').'%');
+            $items->where('title_'.config('app.fallback_locale', 'en'), 'like', '%'.$request->get('q').'%');
         }
         $this->data['items'] = $items->paginate(20);
 
@@ -80,7 +80,7 @@ class CharacteristicsController extends Controller
 
     public function dataTable()
     {
-        $items = Characteristics::select(['id','created_at', 'title_en']);
+        $items = Characteristics::select(['id','created_at', 'title_'.config('app.fallback_locale', 'en')]);
 
         return DataTables::of($items)
             ->addColumn('action', function ($item) {
